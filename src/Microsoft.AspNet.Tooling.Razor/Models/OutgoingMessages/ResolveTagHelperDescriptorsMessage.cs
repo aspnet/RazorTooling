@@ -3,9 +3,9 @@
 
 namespace Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages
 {
-    public class ResolveTagHelperDescriptorsMessage : RazorPluginMessage<ResolveTagHelperDescriptorsMessageData>
+    public class ResolveTagHelperDescriptorsMessage : RazorPluginMessage<ResolveTagHelperDescriptorsResponseData>
     {
-        public ResolveTagHelperDescriptorsMessage(ResolveTagHelperDescriptorsMessageData data)
+        public ResolveTagHelperDescriptorsMessage(ResolveTagHelperDescriptorsResponseData data)
             : base(messageType: RazorPluginMessageTypes.ResolveTagHelperDescriptors, data: data)
         {
         }

@@ -2,7 +2,8 @@
     "version": "1.0.0-*",
     "dependencies": {
         "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
-        "Microsoft.Framework.DesignTimeHost.Interfaces": "1.0.0-*",
+        "Microsoft.Framework.DesignTimeHost.Interfaces": { "version": "1.0.0-*", "type": "build" },
+        "Microsoft.Framework.Runtime.Interfaces": { "version": "1.0.0-*", "type": "build" },
         "Newtonsoft.Json": "6.0.6"
     },
     "frameworks" : {

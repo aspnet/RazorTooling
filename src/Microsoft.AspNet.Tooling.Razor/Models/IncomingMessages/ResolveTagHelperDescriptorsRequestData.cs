@@ -1,15 +1,13 @@
 ﻿// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Newtonsoft.Json.Linq;
+using Microsoft.AspNet.Razor.Text;
 
 namespace Microsoft.AspNet.Tooling.Razor.Models.IncomingMessages
 {
-    public class RazorPluginRequestMessage : RazorPluginMessage<JObject>
+    public class ResolveTagHelperDescriptorsRequestData
     {
-        public RazorPluginRequestMessage(string messageType, JObject data)
-            : base(messageType, data)
-        {
-        }
+        public string AssemblyName { get; set; }
+        public SourceLocation SourceLocation { get; set; } = SourceLocation.Undefined;
     }
 }

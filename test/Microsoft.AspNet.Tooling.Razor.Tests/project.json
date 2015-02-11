@@ -7,8 +7,6 @@
         "aspnet50": { }
     },
     "commands": {
-        "test": "xunit.runner.kre",
-        /* Enables F5 test debugging */
-        "run": "xunit.runner.kre"
+        "test": "xunit.runner.kre"
     }
 }

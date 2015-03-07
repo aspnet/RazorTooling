@@ -18,7 +18,7 @@ namespace Microsoft.AspNet.Tooling.Razor
 {
     public class RazorPluginTest
     {
-        private const string DefaultPrefix = string.Empty;
+        private const string DefaultPrefix = "";
 
         private static readonly Type CustomTagHelperType = typeof(CustomTagHelper);
         private static readonly string CustomTagHelperAssembly = CustomTagHelperType.Assembly.GetName().Name;

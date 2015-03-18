@@ -17,15 +17,13 @@ namespace Microsoft.AspNet.Tooling.Razor
     public class RazorPlugin : IPlugin
     {
         private readonly IPluginMessageBroker _messageBroker;
-        private readonly AssemblyLoadContextTagHelperTypeResolver _tagHelperTypeResolver;
 
-        public RazorPlugin(IPluginMessageBroker messageBroker, IAssemblyLoadContext assemblyLoadContext)
+        public RazorPlugin(IPluginMessageBroker messageBroker)
         {
             _messageBroker = messageBroker;
-            _tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
         }
 
-        public void ProcessMessage(JObject data)
+        public void ProcessMessage(JObject data, IAssemblyLoadContext assemblyLoadContext)
         {
             var message = data.ToObject<RazorPluginRequestMessage>();
 
@@ -67,7 +65,8 @@ namespace Microsoft.AspNet.Tooling.Razor
 
                     var assemblyName = messageData.AssemblyName;
                     var errorSink = new ParserErrorSink();
-                    var tagHelperTypes = _tagHelperTypeResolver.Resolve(
+                    var tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
+                    var tagHelperTypes = tagHelperTypeResolver.Resolve(
                         assemblyName,
                         messageData.SourceLocation,
                         errorSink);

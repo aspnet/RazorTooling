@@ -37,11 +37,12 @@ namespace Microsoft.AspNet.Tooling.Razor
             var message = new JObject();
             var messageBroker = new TestPluginMessageBroker();
             var assemblyLoadContext = new TestAssemblyLoadContext();
-            var plugin = new RazorPlugin(messageBroker, assemblyLoadContext);
+            var plugin = new RazorPlugin(messageBroker);
             var expectedMessage = "'MessageType' must be provided for a 'RazorPluginRequestMessage' message.";
 
             // Act & Assert
-            var error = Assert.Throws<InvalidOperationException>(() => plugin.ProcessMessage(message));
+            var error = Assert.Throws<InvalidOperationException>(
+                () => plugin.ProcessMessage(message, assemblyLoadContext));
             Assert.Equal(expectedMessage, error.Message, StringComparer.Ordinal);
         }
 
@@ -55,11 +56,12 @@ namespace Microsoft.AspNet.Tooling.Razor
             };
             var messageBroker = new TestPluginMessageBroker();
             var assemblyLoadContext = new TestAssemblyLoadContext();
-            var plugin = new RazorPlugin(messageBroker, assemblyLoadContext);
+            var plugin = new RazorPlugin(messageBroker);
             var expectedMessage = "'Data' must be provided for a 'RazorPluginRequestMessage' message.";
 
             // Act & Assert
-            var error = Assert.Throws<InvalidOperationException>(() => plugin.ProcessMessage(message));
+            var error = Assert.Throws<InvalidOperationException>(
+                () => plugin.ProcessMessage(message, assemblyLoadContext));
             Assert.Equal(expectedMessage, error.Message, StringComparer.Ordinal);
         }
 
@@ -75,9 +77,9 @@ namespace Microsoft.AspNet.Tooling.Razor
             var called = false;
             var messageBroker = new TestPluginMessageBroker((_) => called = true);
             var assemblyLoadContext = new TestAssemblyLoadContext();
-            var plugin = new RazorPlugin(messageBroker, assemblyLoadContext);
+            var plugin = new RazorPlugin(messageBroker);
 
-            plugin.ProcessMessage(message);
+            plugin.ProcessMessage(message, assemblyLoadContext);
 
             Assert.False(called);
         }
@@ -94,11 +96,12 @@ namespace Microsoft.AspNet.Tooling.Razor
             };
             var messageBroker = new TestPluginMessageBroker();
             var assemblyLoadContext = new TestAssemblyLoadContext();
-            var plugin = new RazorPlugin(messageBroker, assemblyLoadContext);
+            var plugin = new RazorPlugin(messageBroker);
             var expectedMessage = "'AssemblyName' must be provided for a 'ResolveTagHelperDescriptors' message.";
 
             // Act & Assert
-            var error = Assert.Throws<InvalidOperationException>(() => plugin.ProcessMessage(message));
+            var error = Assert.Throws<InvalidOperationException>(
+                () => plugin.ProcessMessage(message, assemblyLoadContext));
             Assert.Equal(expectedMessage, error.Message, StringComparer.Ordinal);
         }
 
@@ -117,11 +120,12 @@ namespace Microsoft.AspNet.Tooling.Razor
             };
             var messageBroker = new TestPluginMessageBroker();
             var assemblyLoadContext = new TestAssemblyLoadContext();
-            var plugin = new RazorPlugin(messageBroker, assemblyLoadContext);
+            var plugin = new RazorPlugin(messageBroker);
             var expectedMessage = "'SourceLocation' must be provided for a 'ResolveTagHelperDescriptors' message.";
 
             // Act & Assert
-            var error = Assert.Throws<InvalidOperationException>(() => plugin.ProcessMessage(message));
+            var error = Assert.Throws<InvalidOperationException>(
+                () => plugin.ProcessMessage(message, assemblyLoadContext));
             Assert.Equal(expectedMessage, error.Message, StringComparer.Ordinal);
         }
 
@@ -150,10 +154,10 @@ namespace Microsoft.AspNet.Tooling.Razor
                 { CustomTagHelperAssembly, assembly }
             };
             var assemblyLoadContext = new TestAssemblyLoadContext(assemblyNameLookups);
-            var plugin = new RazorPlugin(messageBroker, assemblyLoadContext);
+            var plugin = new RazorPlugin(messageBroker);
 
             // Act
-            plugin.ProcessMessage(message);
+            plugin.ProcessMessage(message, assemblyLoadContext);
 
             // Assert
             Assert.NotNull(responseMessage);
@@ -188,10 +192,10 @@ namespace Microsoft.AspNet.Tooling.Razor
             var messageBroker = new TestPluginMessageBroker(
                 data => responseMessage = (ResolveTagHelperDescriptorsMessage)data);
             var assemblyLoadContext = new ThrowingAssemblyLoadContext("Invalid assembly");
-            var plugin = new RazorPlugin(messageBroker, assemblyLoadContext);
+            var plugin = new RazorPlugin(messageBroker);
 
             // Act
-            plugin.ProcessMessage(message);
+            plugin.ProcessMessage(message, assemblyLoadContext);
 
             // Assert
             Assert.NotNull(responseMessage);

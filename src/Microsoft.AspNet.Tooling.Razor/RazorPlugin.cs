@@ -71,7 +71,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                         messageData.SourceLocation,
                         errorSink);
                     var tagHelperDescriptors = tagHelperTypes.SelectMany(
-                        type => TagHelperDescriptorFactory.CreateDescriptors(assemblyName, type));
+                        type => TagHelperDescriptorFactory.CreateDescriptors(assemblyName, type, errorSink));
 
                     var responseMessage = new ResolveTagHelperDescriptorsMessage(
                         new ResolveTagHelperDescriptorsResponseData

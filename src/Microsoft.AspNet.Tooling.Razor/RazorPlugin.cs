@@ -3,9 +3,8 @@
 
 using System;
 using System.Linq;
-using Microsoft.AspNet.Razor.Parser;
+using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
-using Microsoft.AspNet.Razor.Text;
 using Microsoft.AspNet.Tooling.Razor.Models.IncomingMessages;
 using Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages;
 using Microsoft.Framework.DesignTimeHost;
@@ -64,7 +63,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                     }
 
                     var assemblyName = messageData.AssemblyName;
-                    var errorSink = new ParserErrorSink();
+                    var errorSink = new ErrorSink();
                     var tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
                     var tagHelperTypes = tagHelperTypeResolver.Resolve(
                         assemblyName,

@@ -58,7 +58,8 @@ namespace Microsoft.AspNet.Tooling.Razor
             var messageBroker = new TestPluginMessageBroker();
             var assemblyLoadContext = new TestAssemblyLoadContext();
             var plugin = new RazorPlugin(messageBroker);
-            var expectedMessage = "'Data' must be provided for a 'RazorPluginRequestMessage' message.";
+            var expectedMessage = "'Data' must be provided for a '" +
+                RazorPluginMessageTypes.ResolveTagHelperDescriptors + "' message.";
 
             // Act & Assert
             var error = Assert.Throws<InvalidOperationException>(
@@ -128,6 +129,29 @@ namespace Microsoft.AspNet.Tooling.Razor
             var error = Assert.Throws<InvalidOperationException>(
                 () => plugin.ProcessMessage(message, assemblyLoadContext));
             Assert.Equal(expectedMessage, error.Message, StringComparer.Ordinal);
+        }
+
+        [Fact]
+        public void ProcessMessage_PluginProtocol_ResolvesCurrentProtocol()
+        {
+            // Arrange
+            var message = new JObject
+            {
+                { "MessageType", RazorPluginMessageTypes.PluginProtocol },
+            };
+            PluginProtocolMessage responseMessage = null;
+            var messageBroker = new TestPluginMessageBroker(data => responseMessage = (PluginProtocolMessage)data);
+            var assemblyLoadContext = new TestAssemblyLoadContext();
+            var plugin = new RazorPlugin(messageBroker);
+
+            // Act
+            plugin.ProcessMessage(message, assemblyLoadContext);
+
+            // Assert
+            Assert.NotNull(responseMessage);
+            Assert.Equal(RazorPluginMessageTypes.PluginProtocol, responseMessage.MessageType, StringComparer.Ordinal);
+            var responseData = responseMessage.Data;
+            Assert.Equal("1.0.0", responseData, StringComparer.Ordinal);
         }
 
         [Fact]

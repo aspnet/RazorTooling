@@ -15,7 +15,6 @@ namespace Microsoft.AspNet.Tooling.Razor
 {
     public class RazorPlugin : IPlugin
     {
-        private static readonly Version Protocol = new Version(1, 0, 0);
         private readonly IPluginMessageBroker _messageBroker;
 
         public RazorPlugin(IPluginMessageBroker messageBroker)
@@ -23,7 +22,9 @@ namespace Microsoft.AspNet.Tooling.Razor
             _messageBroker = messageBroker;
         }
 
-        public void ProcessMessage(JObject data, IAssemblyLoadContext assemblyLoadContext)
+        public int Protocol { get; set; } = 1;
+
+        public bool ProcessMessage(JObject data, IAssemblyLoadContext assemblyLoadContext)
         {
             var message = data.ToObject<RazorPluginRequestMessage>();
 
@@ -37,9 +38,6 @@ namespace Microsoft.AspNet.Tooling.Razor
 
             switch (message.MessageType)
             {
-                case RazorPluginMessageTypes.PluginProtocol:
-                    _messageBroker.SendMessage(new PluginProtocolMessage(Protocol));
-                    break;
                 case RazorPluginMessageTypes.ResolveTagHelperDescriptors:
                     if (message.Data == null)
                     {
@@ -86,7 +84,12 @@ namespace Microsoft.AspNet.Tooling.Razor
 
                     _messageBroker.SendMessage(responseMessage);
                     break;
+                default:
+                    // Unknown message.
+                    return false;
             }
+
+            return true;
         }
     }
 }

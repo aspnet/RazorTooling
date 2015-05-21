@@ -6,6 +6,5 @@ namespace Microsoft.AspNet.Tooling.Razor
     public static class RazorPluginMessageTypes
     {
         public const string ResolveTagHelperDescriptors = nameof(ResolveTagHelperDescriptors);
-        public const string PluginProtocol = nameof(PluginProtocol);
     }
 }

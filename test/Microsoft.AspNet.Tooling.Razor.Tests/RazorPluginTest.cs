@@ -70,6 +70,7 @@ namespace Microsoft.AspNet.Tooling.Razor
         [Fact]
         public void ProcessMessage_NoOpsForUnknownMessageType()
         {
+            // Arrange
             var messageData = new JObject();
             var message = new JObject
             {
@@ -81,9 +82,12 @@ namespace Microsoft.AspNet.Tooling.Razor
             var assemblyLoadContext = new TestAssemblyLoadContext();
             var plugin = new RazorPlugin(messageBroker);
 
-            plugin.ProcessMessage(message, assemblyLoadContext);
+            // Act
+            var handled = plugin.ProcessMessage(message, assemblyLoadContext);
 
+            // Assert
             Assert.False(called);
+            Assert.False(handled);
         }
 
         [Fact]
@@ -132,29 +136,6 @@ namespace Microsoft.AspNet.Tooling.Razor
         }
 
         [Fact]
-        public void ProcessMessage_PluginProtocol_ResolvesCurrentProtocol()
-        {
-            // Arrange
-            var message = new JObject
-            {
-                { "MessageType", RazorPluginMessageTypes.PluginProtocol },
-            };
-            PluginProtocolMessage responseMessage = null;
-            var messageBroker = new TestPluginMessageBroker(data => responseMessage = (PluginProtocolMessage)data);
-            var assemblyLoadContext = new TestAssemblyLoadContext();
-            var plugin = new RazorPlugin(messageBroker);
-
-            // Act
-            plugin.ProcessMessage(message, assemblyLoadContext);
-
-            // Assert
-            Assert.NotNull(responseMessage);
-            Assert.Equal(RazorPluginMessageTypes.PluginProtocol, responseMessage.MessageType, StringComparer.Ordinal);
-            var responseData = responseMessage.Data;
-            Assert.Equal("1.0.0", responseData, StringComparer.Ordinal);
-        }
-
-        [Fact]
         public void ProcessMessage_ResolveTagHelperDescriptors_ResolvesTagHelperDescriptors()
         {
             // Arrange
@@ -182,7 +163,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             var plugin = new RazorPlugin(messageBroker);
 
             // Act
-            plugin.ProcessMessage(message, assemblyLoadContext);
+            var handled = plugin.ProcessMessage(message, assemblyLoadContext);
 
             // Assert
             Assert.NotNull(responseMessage);
@@ -195,6 +176,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             var actualDescriptor = Assert.Single(responseData.Descriptors);
             Assert.Equal(CustomTagHelperDescriptor, actualDescriptor, TagHelperDescriptorComparer.Default);
             Assert.Empty(responseData.Errors);
+            Assert.True(handled);
         }
 
         [Fact]
@@ -220,7 +202,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             var plugin = new RazorPlugin(messageBroker);
 
             // Act
-            plugin.ProcessMessage(message, assemblyLoadContext);
+            var handled = plugin.ProcessMessage(message, assemblyLoadContext);
 
             // Assert
             Assert.NotNull(responseMessage);
@@ -238,6 +220,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 StringComparer.Ordinal);
             Assert.Equal(expectedSourceLocation, error.Location);
             Assert.Equal(1, error.Length);
+            Assert.True(handled);
         }
 
         private class ThrowingAssemblyLoadContext : TestAssemblyLoadContext, IAssemblyLoadContext

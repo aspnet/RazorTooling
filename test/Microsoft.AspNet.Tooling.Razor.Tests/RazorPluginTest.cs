@@ -249,9 +249,9 @@ namespace Microsoft.AspNet.Tooling.Razor
                 _errorMessage = errorMessage;
             }
 
-            Assembly IAssemblyLoadContext.Load(string name)
+            Assembly IAssemblyLoadContext.Load(AssemblyName assemblyName)
             {
-                throw new Exception(_errorMessage + ": " + name);
+                throw new Exception(_errorMessage + ": " + assemblyName.Name);
             }
         }
     }

@@ -28,9 +28,9 @@ namespace Microsoft.AspNet.Tooling.Razor.Tests
             throw new NotImplementedException();
         }
 
-        public Assembly Load(string name)
+        public Assembly Load(AssemblyName assemblyName)
         {
-            return _assemblyNameLookups[name];
+            return _assemblyNameLookups[assemblyName.Name];
         }
 
         public Assembly LoadFile(string path)

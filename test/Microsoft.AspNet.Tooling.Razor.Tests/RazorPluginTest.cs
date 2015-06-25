@@ -29,7 +29,8 @@ namespace Microsoft.AspNet.Tooling.Razor
                 CustomTagHelperType.FullName,
                 CustomTagHelperAssembly,
                 attributes: new TagHelperAttributeDescriptor[0],
-                requiredAttributes: new string[0]);
+                requiredAttributes: new string[0],
+                usageDescriptor: null);
 
         [Fact]
         public void ProcessMessage_ThrowsWhenNoMessageType()

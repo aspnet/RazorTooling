@@ -1,9 +1,9 @@
 {
-    "version": "1.0.0-*",
+    "version": "1.0.0-beta5",
     "dependencies": {
-        "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
-        "Microsoft.Framework.DesignTimeHost.Abstractions": { "version": "1.0.0-*", "type": "build" },
-        "Microsoft.Framework.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
+        "Microsoft.AspNet.Razor.Runtime": "4.0.0-beta5",
+        "Microsoft.Framework.DesignTimeHost.Abstractions": { "version": "1.0.0-beta5", "type": "build" },
+        "Microsoft.Framework.Runtime.Abstractions": { "version": "1.0.0-beta5", "type": "build" },
         "Newtonsoft.Json": "6.0.6"
     },
     "frameworks" : {

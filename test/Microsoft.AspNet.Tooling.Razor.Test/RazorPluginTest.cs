@@ -7,6 +7,7 @@ using System.Reflection;
 using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNet.Razor.Test.Internal;
 using Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages;
 using Microsoft.AspNet.Tooling.Razor.Tests;
 using Microsoft.Framework.Runtime;
@@ -175,7 +176,65 @@ namespace Microsoft.AspNet.Tooling.Razor
             var responseData = responseMessage.Data;
             Assert.Equal(CustomTagHelperAssembly, responseData.AssemblyName, StringComparer.Ordinal);
             var actualDescriptor = Assert.Single(responseData.Descriptors);
-            Assert.Equal(CustomTagHelperDescriptor, actualDescriptor, TagHelperDescriptorComparer.Default);
+            Assert.Equal(
+                CustomTagHelperDescriptor,
+                actualDescriptor,
+                CaseSensitiveTagHelperDescriptorComparer.Default);
+            Assert.Empty(responseData.Errors);
+            Assert.True(handled);
+        }
+
+        [Fact]
+        public void ProcessMessage_ResolveTagHelperDescriptors_ResolvesDesignTimeTagHelperDescriptors()
+        {
+            // Arrange
+            var expectedSourceLocation = new SourceLocation(absoluteIndex: 1, lineIndex: 2, characterIndex: 3);
+            var sourceLocationJson = JsonConvert.SerializeObject(expectedSourceLocation);
+            var messageData = new JObject
+            {
+                { "AssemblyName", CustomTagHelperAssembly },
+                { "SourceLocation", JObject.Parse(sourceLocationJson) }
+            };
+            var message = new JObject
+            {
+                { "MessageType", RazorPluginMessageTypes.ResolveTagHelperDescriptors },
+                { "Data", messageData },
+            };
+            ResolveTagHelperDescriptorsMessage responseMessage = null;
+            var messageBroker = new TestPluginMessageBroker(
+                data => responseMessage = (ResolveTagHelperDescriptorsMessage)data);
+            var assembly = new TestAssembly(typeof(DesignTimeTagHelper));
+            var assemblyNameLookups = new Dictionary<string, Assembly>
+            {
+                { CustomTagHelperAssembly, assembly }
+            };
+            var assemblyLoadContext = new TestAssemblyLoadContext(assemblyNameLookups);
+            var plugin = new RazorPlugin(messageBroker);
+            var expectedDescriptor = new TagHelperDescriptor(
+                DefaultPrefix,
+                "design-time",
+                typeof(DesignTimeTagHelper).FullName,
+                typeof(DesignTimeTagHelper).Assembly.GetName().Name,
+                attributes: new TagHelperAttributeDescriptor[0],
+                requiredAttributes: new string[0],
+                designTimeDescriptor: new TagHelperDesignTimeDescriptor(
+                    summary: null,
+                    remarks: null,
+                    outputElementHint: "strong"));
+
+            // Act
+            var handled = plugin.ProcessMessage(message, assemblyLoadContext);
+
+            // Assert
+            Assert.NotNull(responseMessage);
+            Assert.Equal(
+                RazorPluginMessageTypes.ResolveTagHelperDescriptors,
+                responseMessage.MessageType,
+                StringComparer.Ordinal);
+            var responseData = responseMessage.Data;
+            Assert.Equal(CustomTagHelperAssembly, responseData.AssemblyName, StringComparer.Ordinal);
+            var actualDescriptor = Assert.Single(responseData.Descriptors);
+            Assert.Equal(expectedDescriptor, actualDescriptor, CaseSensitiveTagHelperDescriptorComparer.Default);
             Assert.Empty(responseData.Errors);
             Assert.True(handled);
         }
@@ -242,6 +301,11 @@ namespace Microsoft.AspNet.Tooling.Razor
 
     // Needs to be a public, non nested type to be a valid TagHelper
     public class CustomTagHelper : TagHelper
+    {
+    }
+
+    [OutputElementHint("strong")]
+    public class DesignTimeTagHelper : TagHelper
     {
     }
 }

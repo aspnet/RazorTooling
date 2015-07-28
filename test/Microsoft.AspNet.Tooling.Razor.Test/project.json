@@ -1,6 +1,14 @@
 {
   "dependencies": {
     "Microsoft.AspNet.Tooling.Razor": "1.0.0-*",
+    "Microsoft.AspNet.Razor.Test.Sources": {
+      "version": "1.0.0-*",
+      "type": "build"
+    },
+    "Microsoft.Framework.HashCodeCombiner.Sources": {
+      "version": "1.0.0-*",
+      "type": "build"
+    },
     "xunit.runner.aspnet": "2.0.0-aspnet-*"
   },
   "frameworks": {

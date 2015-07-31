@@ -2,16 +2,16 @@
     "version": "1.0.0-*",
     "dependencies": {
         "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
-        "Microsoft.Framework.DesignTimeHost.Abstractions": { "version": "1.0.0-*", "type": "build" },
-        "Microsoft.Framework.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
+        "Microsoft.Dnx.DesignTimeHost.Abstractions": { "version": "1.0.0-*", "type": "build" },
+        "Microsoft.Dnx.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
         "Newtonsoft.Json": "6.0.6"
     },
     "frameworks" : {
-        "dnx451" : { 
+        "dnx451" : {
             "dependencies": {
             }
         },
-        "dnxcore50" : { 
+        "dnxcore50" : {
             "dependencies": {
                 "System.Runtime": "4.0.20-*"
             }

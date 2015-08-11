@@ -31,6 +31,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 CustomTagHelperAssembly,
                 attributes: new TagHelperAttributeDescriptor[0],
                 requiredAttributes: new string[0],
+                tagStructure: TagStructure.Unspecified,
                 designTimeDescriptor: null);
 
         [Fact]
@@ -217,6 +218,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 typeof(DesignTimeTagHelper).Assembly.GetName().Name,
                 attributes: new TagHelperAttributeDescriptor[0],
                 requiredAttributes: new string[0],
+                tagStructure: TagStructure.NormalOrSelfClosing,
                 designTimeDescriptor: new TagHelperDesignTimeDescriptor(
                     summary: null,
                     remarks: null,
@@ -305,6 +307,7 @@ namespace Microsoft.AspNet.Tooling.Razor
     }
 
     [OutputElementHint("strong")]
+    [TargetElement("design-time", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class DesignTimeTagHelper : TagHelper
     {
     }

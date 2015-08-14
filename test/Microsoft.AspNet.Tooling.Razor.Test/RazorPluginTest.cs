@@ -219,10 +219,10 @@ namespace Microsoft.AspNet.Tooling.Razor
                 attributes: new TagHelperAttributeDescriptor[0],
                 requiredAttributes: new string[0],
                 tagStructure: TagStructure.NormalOrSelfClosing,
-                designTimeDescriptor: new TagHelperDesignTimeDescriptor(
-                    summary: null,
-                    remarks: null,
-                    outputElementHint: "strong"));
+                designTimeDescriptor: new TagHelperDesignTimeDescriptor
+                {
+                    OutputElementHint = "strong"
+                });
 
             // Act
             var handled = plugin.ProcessMessage(message, assemblyLoadContext);

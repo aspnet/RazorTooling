@@ -24,16 +24,13 @@ namespace Microsoft.AspNet.Tooling.Razor
         private static readonly Type CustomTagHelperType = typeof(CustomTagHelper);
         private static readonly string CustomTagHelperAssembly = CustomTagHelperType.Assembly.GetName().Name;
         private static readonly TagHelperDescriptor CustomTagHelperDescriptor =
-            new TagHelperDescriptor(
-                DefaultPrefix,
-                "custom",
-                CustomTagHelperType.FullName,
-                CustomTagHelperAssembly,
-                attributes: new TagHelperAttributeDescriptor[0],
-                requiredAttributes: new string[0],
-                allowedChildren: null,
-                tagStructure: TagStructure.Unspecified,
-                designTimeDescriptor: null);
+            new TagHelperDescriptor
+            {
+                Prefix = DefaultPrefix,
+                TagName = "custom",
+                TypeName = CustomTagHelperType.FullName,
+                AssemblyName = CustomTagHelperAssembly
+            };
 
         [Fact]
         public void ProcessMessage_ThrowsWhenNoMessageType()
@@ -212,19 +209,19 @@ namespace Microsoft.AspNet.Tooling.Razor
             };
             var assemblyLoadContext = new TestAssemblyLoadContext(assemblyNameLookups);
             var plugin = new RazorPlugin(messageBroker);
-            var expectedDescriptor = new TagHelperDescriptor(
-                DefaultPrefix,
-                "design-time",
-                typeof(DesignTimeTagHelper).FullName,
-                typeof(DesignTimeTagHelper).Assembly.GetName().Name,
-                attributes: new TagHelperAttributeDescriptor[0],
-                requiredAttributes: new string[0],
-                allowedChildren: new[] { "br" },
-                tagStructure: TagStructure.NormalOrSelfClosing,
-                designTimeDescriptor: new TagHelperDesignTimeDescriptor
+            var expectedDescriptor = new TagHelperDescriptor
+            {
+                Prefix = DefaultPrefix,
+                TagName = "design-time",
+                TypeName = typeof(DesignTimeTagHelper).FullName,
+                AssemblyName = typeof(DesignTimeTagHelper).Assembly.GetName().Name,
+                AllowedChildren = new[] { "br" },
+                TagStructure = TagStructure.NormalOrSelfClosing,
+                DesignTimeDescriptor = new TagHelperDesignTimeDescriptor
                 {
                     OutputElementHint = "strong"
-                });
+                }
+            };
 
             // Act
             var handled = plugin.ProcessMessage(message, assemblyLoadContext);

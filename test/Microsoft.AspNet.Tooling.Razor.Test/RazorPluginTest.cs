@@ -280,7 +280,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 error.Message,
                 StringComparer.Ordinal);
             Assert.Equal(expectedSourceLocation, error.Location);
-            Assert.Equal(1, error.Length);
+            Assert.Equal(7, error.Length);
             Assert.True(handled);
         }
 

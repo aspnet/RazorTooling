@@ -307,7 +307,7 @@ namespace Microsoft.AspNet.Tooling.Razor
 
     [RestrictChildren("br")]
     [OutputElementHint("strong")]
-    [TargetElement("design-time", TagStructure = TagStructure.NormalOrSelfClosing)]
+    [HtmlTargetElement("design-time", TagStructure = TagStructure.NormalOrSelfClosing)]
     public class DesignTimeTagHelper : TagHelper
     {
     }

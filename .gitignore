@@ -34,3 +34,4 @@ nuget.exe
 node_modules
 project.lock.json
 **/[Cc]ompiler/[Rr]esources/**/*.js
+launchSettings.json

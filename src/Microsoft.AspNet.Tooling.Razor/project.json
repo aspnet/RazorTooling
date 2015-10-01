@@ -5,7 +5,6 @@
     "Microsoft.Dnx.DesignTimeHost.Abstractions": { "version": "1.0.0-*", "type": "build" },
     "Microsoft.Dnx.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
     "Microsoft.Framework.CommandLineUtils.Sources": { "version": "1.0.0-*", "type": "build" },
-    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-*",
     "Newtonsoft.Json": "6.0.6"
   },
   "frameworks": {

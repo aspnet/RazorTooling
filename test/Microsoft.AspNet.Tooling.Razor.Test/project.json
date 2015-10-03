@@ -2,7 +2,7 @@
   "dependencies": {
     "Microsoft.AspNet.Tooling.Razor": "1.0.0-*",
     "Microsoft.AspNet.Razor.Test.Sources": {
-      "version": "1.0.0-*",
+      "version": "4.0.0-*",
       "type": "build"
     },
     "Microsoft.Framework.HashCodeCombiner.Sources": {

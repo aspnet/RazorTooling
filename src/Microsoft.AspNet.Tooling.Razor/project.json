@@ -1,19 +1,24 @@
 {
-    "version": "1.0.0-*",
+    "version": "1.0.0-beta8",
     "dependencies": {
-        "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
-        "Microsoft.Dnx.DesignTimeHost.Abstractions": { "version": "1.0.0-*", "type": "build" },
-        "Microsoft.Dnx.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
+        "Microsoft.AspNet.Razor.Runtime": "4.0.0-beta8",
+        "Microsoft.Dnx.DesignTimeHost.Abstractions": {
+            "version": "1.0.0-beta8",
+            "type": "build"
+        },
+        "Microsoft.Dnx.Runtime.Abstractions": {
+            "version": "1.0.0-beta8",
+            "type": "build"
+        },
         "Newtonsoft.Json": "6.0.6"
     },
-    "frameworks" : {
-        "dnx451" : {
-            "dependencies": {
-            }
+    "frameworks": {
+        "dnx451": {
+            "dependencies": {}
         },
-        "dnxcore50" : {
+        "dnxcore50": {
             "dependencies": {
-                "System.Runtime": "4.0.21-beta-*"
+                "System.Runtime": "4.0.21-beta-23409"
             }
         }
     }

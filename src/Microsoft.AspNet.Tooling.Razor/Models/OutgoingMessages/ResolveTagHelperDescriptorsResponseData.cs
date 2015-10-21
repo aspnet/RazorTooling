@@ -3,7 +3,7 @@
 
 using System.Collections.Generic;
 using Microsoft.AspNet.Razor;
-using Microsoft.AspNet.Razor.TagHelpers;
+using Microsoft.AspNet.Razor.Compilation.TagHelpers;
 
 namespace Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages
 {

@@ -2,17 +2,25 @@
   "version": "1.0.0-*",
   "dependencies": {
     "Microsoft.AspNet.Razor.Runtime": "4.0.0-*",
-    "Microsoft.Dnx.DesignTimeHost.Abstractions": { "version": "1.0.0-*", "type": "build" },
-    "Microsoft.Dnx.Runtime.Abstractions": { "version": "1.0.0-*", "type": "build" },
-    "Microsoft.Extensions.CommandLineUtils.Sources": { "version": "1.0.0-*", "type": "build" },
+    "Microsoft.Dnx.DesignTimeHost.Abstractions": {
+      "version": "1.0.0-*",
+      "type": "build"
+    },
+    "Microsoft.Dnx.Runtime.Abstractions": {
+      "version": "1.0.0-*",
+      "type": "build"
+    },
+    "Microsoft.Extensions.CommandLineUtils.Sources": {
+      "version": "1.0.0-*",
+      "type": "build"
+    },
     "Newtonsoft.Json": "6.0.6"
   },
   "frameworks": {
-    "dnx451": {
-      "dependencies": {
-      }
+    "net451": {
+      "dependencies": {}
     },
-    "dnxcore50": {
+    "dotnet5.4": {
       "dependencies": {
         "System.Runtime": "4.0.21-beta-*",
         "System.Console": "4.0.0-beta-*"

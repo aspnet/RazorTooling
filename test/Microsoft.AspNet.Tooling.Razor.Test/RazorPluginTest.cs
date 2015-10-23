@@ -10,7 +10,7 @@ using Microsoft.AspNet.Razor.TagHelpers;
 using Microsoft.AspNet.Razor.Test.Internal;
 using Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages;
 using Microsoft.AspNet.Tooling.Razor.Tests;
-using Microsoft.Dnx.Runtime;
+using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Xunit;

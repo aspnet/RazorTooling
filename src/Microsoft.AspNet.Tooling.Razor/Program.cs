@@ -3,7 +3,7 @@
 
 using System;
 using System.Reflection;
-using Microsoft.Dnx.Runtime;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Dnx.Runtime.Common.CommandLine;
 
 namespace Microsoft.AspNet.Tooling.Razor

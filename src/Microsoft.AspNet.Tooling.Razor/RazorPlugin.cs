@@ -7,8 +7,8 @@ using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.AspNet.Tooling.Razor.Models.IncomingMessages;
 using Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Dnx.DesignTimeHost;
-using Microsoft.Dnx.Runtime;
 using Newtonsoft.Json.Linq;
 
 namespace Microsoft.AspNet.Tooling.Razor

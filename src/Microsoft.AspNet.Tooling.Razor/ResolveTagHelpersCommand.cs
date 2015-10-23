@@ -8,7 +8,7 @@ using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Tooling.Razor.Models.IncomingMessages;
 using Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages;
 using Microsoft.Dnx.DesignTimeHost;
-using Microsoft.Dnx.Runtime;
+using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Dnx.Runtime.Common.CommandLine;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;

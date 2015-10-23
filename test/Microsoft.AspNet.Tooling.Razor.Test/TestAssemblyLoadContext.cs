@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using Microsoft.Dnx.Runtime;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Microsoft.AspNet.Tooling.Razor.Tests
 {
@@ -39,6 +39,16 @@ namespace Microsoft.AspNet.Tooling.Razor.Tests
         }
 
         public Assembly LoadStream(Stream assemblyStream, Stream assemblySymbols)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IntPtr LoadUnmanagedLibrary(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IntPtr LoadUnmanagedLibraryFromPath(string path)
         {
             throw new NotImplementedException();
         }

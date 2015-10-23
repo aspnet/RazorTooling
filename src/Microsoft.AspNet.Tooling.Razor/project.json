@@ -6,7 +6,7 @@
       "version": "1.0.0-*",
       "type": "build"
     },
-    "Microsoft.Dnx.Runtime.Abstractions": {
+    "Microsoft.Extensions.PlatformAbstractions": {
       "version": "1.0.0-*",
       "type": "build"
     },

@@ -5,11 +5,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.Razor;
+using Microsoft.AspNet.Razor.Compilation.TagHelpers;
 using Microsoft.AspNet.Tooling.Razor.Models.IncomingMessages;
 using Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages;
 using Microsoft.Dnx.DesignTimeHost;
-using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Dnx.Runtime.Common.CommandLine;
+using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -56,13 +57,26 @@ namespace Microsoft.AspNet.Tooling.Razor
                     }
 
                     var resolvedDescriptors = messageBroker.Results.SelectMany(result => result.Data.Descriptors);
-                    var serializedDescriptors = JsonConvert.SerializeObject(resolvedDescriptors, Formatting.Indented);
+                    var resolvedErrors = messageBroker.Results.SelectMany(result => result.Data.Errors);
+                    var resolvedResult = new ResolvedTagHelperDescriptorsResult
+                    {
+                        Descriptors = resolvedDescriptors,
+                        Errors = resolvedErrors
+                    };
+                    var serializedResult = JsonConvert.SerializeObject(resolvedResult, Formatting.Indented);
 
-                    Console.WriteLine(serializedDescriptors);
+                    Console.WriteLine(serializedResult);
 
                     return success ? 0 : 1;
                 });
             });
+        }
+
+        private class ResolvedTagHelperDescriptorsResult
+        {
+            public IEnumerable<TagHelperDescriptor> Descriptors { get; set; }
+
+            public IEnumerable<RazorError> Errors { get; set; }
         }
 
         private class CommandMessageBroker : IPluginMessageBroker

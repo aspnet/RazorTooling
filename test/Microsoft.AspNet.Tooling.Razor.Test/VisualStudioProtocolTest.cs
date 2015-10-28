@@ -47,6 +47,20 @@ namespace Microsoft.AspNet.Tooling.Razor
                             Remarks = "Some attribute level remarks.",
                             Summary = "Some attribute level summary."
                         }
+                    },
+                    new TagHelperAttributeDescriptor
+                    {
+                        IsIndexer = false,
+                        IsEnum = true,
+                        IsStringProperty = false,
+                        Name = "bind-enum",
+                        PropertyName = "BindEnum",
+                        TypeName = "MyEnumNamespace",
+                        DesignTimeDescriptor = new TagHelperAttributeDesignTimeDescriptor
+                        {
+                            Remarks = "Some enum attribute level remarks.",
+                            Summary = "Some enum attribute level summary."
+                        }
                     }
                 }
             };
@@ -80,6 +94,20 @@ namespace Microsoft.AspNet.Tooling.Razor
                             Remarks = "Some attribute level remarks.",
                             Summary = "Some attribute level summary."
                         }
+                    },
+                    new VisualStudioTagHelperAttributeDescriptor
+                    {
+                        IsIndexer = false,
+                        IsEnum = true,
+                        IsStringProperty = false,
+                        Name = "bind-enum",
+                        PropertyName = "BindEnum",
+                        TypeName = "MyEnumNamespace",
+                        DesignTimeDescriptor = new VisualStudioTagHelperAttributeDesignTimeDescriptor
+                        {
+                            Remarks = "Some enum attribute level remarks.",
+                            Summary = "Some enum attribute level summary."
+                        }
                     }
                 }
             };
@@ -105,22 +133,30 @@ namespace Microsoft.AspNet.Tooling.Razor
             Assert.Equal(expectedDTDescriptor.Remarks, dtDescriptor.Remarks, StringComparer.Ordinal);
             Assert.Equal(expectedDTDescriptor.Summary, dtDescriptor.Summary, StringComparer.Ordinal);
 
-            var attribute = Assert.Single(vsDescriptor.Attributes);
-            var expectedAttribute = Assert.Single(expectedVSDescriptor.Attributes);
-            Assert.Equal(attribute.IsIndexer, expectedAttribute.IsIndexer);
-            Assert.Equal(attribute.IsStringProperty, expectedAttribute.IsStringProperty);
-            Assert.Equal(attribute.Name, expectedAttribute.Name, StringComparer.Ordinal);
-            Assert.Equal(attribute.PropertyName, expectedAttribute.PropertyName, StringComparer.Ordinal);
-            Assert.Equal(attribute.TypeName, expectedAttribute.TypeName, StringComparer.Ordinal);
+            var attributes = vsDescriptor.Attributes.OrderBy(attr => attr.Name).ToArray();
+            var expectedAttributes = expectedVSDescriptor.Attributes.OrderBy(attr => attr.Name).ToArray();
+            Assert.Equal(attributes.Length, expectedAttributes.Length);
 
-            var dtAttribute = attribute.DesignTimeDescriptor;
-            var expectedDTAttribute = expectedAttribute.DesignTimeDescriptor;
-            Assert.Equal(dtAttribute.Remarks, expectedDTAttribute.Remarks, StringComparer.Ordinal);
-            Assert.Equal(dtAttribute.Summary, expectedDTAttribute.Summary, StringComparer.Ordinal);
+            for (var i = 0; i < attributes.Length; i++)
+            {
+                var attribute = attributes[i];
+                var expectedAttribute = expectedAttributes[i];
+                Assert.Equal(attribute.IsIndexer, expectedAttribute.IsIndexer);
+                Assert.Equal(attribute.IsEnum, expectedAttribute.IsEnum);
+                Assert.Equal(attribute.IsStringProperty, expectedAttribute.IsStringProperty);
+                Assert.Equal(attribute.Name, expectedAttribute.Name, StringComparer.Ordinal);
+                Assert.Equal(attribute.PropertyName, expectedAttribute.PropertyName, StringComparer.Ordinal);
+                Assert.Equal(attribute.TypeName, expectedAttribute.TypeName, StringComparer.Ordinal);
+
+                var dtAttribute = attribute.DesignTimeDescriptor;
+                var expectedDTAttribute = expectedAttribute.DesignTimeDescriptor;
+                Assert.Equal(dtAttribute.Remarks, expectedDTAttribute.Remarks, StringComparer.Ordinal);
+                Assert.Equal(dtAttribute.Summary, expectedDTAttribute.Summary, StringComparer.Ordinal);
+            }
         }
 
         #region PinnedVisualStudioTagHelperDescriptors
-        // RC1 Razor TagHelperDescriptor Snapshot
+        // RC2 Razor TagHelperDescriptor Snapshot
         public class VisualStudioTagHelperAttributeDesignTimeDescriptor
         {
             public string Summary { get; set; }
@@ -141,6 +177,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             private string _propertyName;
 
             public bool IsIndexer { get; set; }
+            public bool IsEnum { get; set; }
             public bool IsStringProperty { get; set; }
             public string Name
             {

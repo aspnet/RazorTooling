@@ -32,6 +32,34 @@ namespace Microsoft.AspNet.Tooling.Razor
                 AssemblyName = CustomTagHelperAssembly
             };
 
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(0)]
+        [InlineData(2)]
+        public void ProcessMessage_ThrowsWhenInvalidProtocol(int protocol)
+        {
+            // Arrange
+            var message = new JObject
+            {
+                { "MessageType", "SomethingThatNoOps" },
+                { "Data", new JObject() },
+            };
+            var messageBroker = new TestPluginMessageBroker();
+            var assemblyLoadContext = new TestAssemblyLoadContext();
+            var plugin = new RazorPlugin(messageBroker)
+            {
+                Protocol = protocol
+            };
+            var typeName = typeof(TagHelperDescriptor).FullName;
+            var expectedMessage =
+                $"'{typeName}'s cannot be resolved with protocol '{protocol}'. Protocol not supported.";
+
+            // Act & Assert
+            var exception = Assert.Throws<InvalidOperationException>(
+                () => plugin.ProcessMessage(message, assemblyLoadContext));
+            Assert.Equal(expectedMessage, exception.Message, StringComparer.Ordinal);
+        }
+
         [Fact]
         public void ProcessMessage_ThrowsWhenNoMessageType()
         {

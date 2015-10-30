@@ -10,6 +10,7 @@ using Microsoft.AspNet.Tooling.Razor.Models.OutgoingMessages;
 using Microsoft.Extensions.PlatformAbstractions;
 using Microsoft.Dnx.DesignTimeHost;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNet.Razor.Compilation.TagHelpers;
 
 namespace Microsoft.AspNet.Tooling.Razor
 {
@@ -26,74 +27,83 @@ namespace Microsoft.AspNet.Tooling.Razor
 
         public bool ProcessMessage(JObject data, IAssemblyLoadContext assemblyLoadContext)
         {
-            var message = data.ToObject<RazorPluginRequestMessage>();
-
-            if (message.MessageType == null)
+            if (Protocol == 1)
             {
-                throw new InvalidOperationException(
-                    Resources.FormatValueMustBeProvidedInMessage(
-                        nameof(message.MessageType),
-                        nameof(RazorPluginRequestMessage)));
-            }
+                var message = data.ToObject<RazorPluginRequestMessage>();
 
-            switch (message.MessageType)
-            {
-                case RazorPluginMessageTypes.ResolveTagHelperDescriptors:
-                    if (message.Data == null)
-                    {
-                        throw new InvalidOperationException(
-                            Resources.FormatValueMustBeProvidedInMessage(
-                                nameof(message.Data),
-                                RazorPluginMessageTypes.ResolveTagHelperDescriptors));
-                    }
+                if (message.MessageType == null)
+                {
+                    throw new InvalidOperationException(
+                        Resources.FormatValueMustBeProvidedInMessage(
+                            nameof(message.MessageType),
+                            nameof(RazorPluginRequestMessage)));
+                }
 
-                    var messageData = message.Data.ToObject<ResolveTagHelperDescriptorsRequestData>();
-
-                    if (messageData.AssemblyName == null)
-                    {
-                        throw new InvalidOperationException(
-                            Resources.FormatValueMustBeProvidedInMessage(
-                                nameof(messageData.AssemblyName),
-                                RazorPluginMessageTypes.ResolveTagHelperDescriptors));
-                    }
-                    else if (messageData.SourceLocation == SourceLocation.Undefined)
-                    {
-                        throw new InvalidOperationException(
-                            Resources.FormatValueMustBeProvidedInMessage(
-                                nameof(messageData.SourceLocation),
-                                RazorPluginMessageTypes.ResolveTagHelperDescriptors));
-                    }
-
-                    var assemblyName = messageData.AssemblyName;
-                    var errorSink = new ErrorSink();
-                    var tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
-                    var tagHelperTypes = tagHelperTypeResolver.Resolve(
-                        assemblyName,
-                        messageData.SourceLocation,
-                        errorSink);
-                    var tagHelperDescriptors = tagHelperTypes.SelectMany(
-                        type => TagHelperDescriptorFactory.CreateDescriptors(
-                            assemblyName,
-                            type,
-                            designTime: true,
-                            errorSink: errorSink));
-
-                    var responseMessage = new ResolveTagHelperDescriptorsMessage(
-                        new ResolveTagHelperDescriptorsResponseData
+                switch (message.MessageType)
+                {
+                    case RazorPluginMessageTypes.ResolveTagHelperDescriptors:
+                        if (message.Data == null)
                         {
-                            AssemblyName = assemblyName,
-                            Descriptors = tagHelperDescriptors,
-                            Errors = errorSink.Errors
-                        });
+                            throw new InvalidOperationException(
+                                Resources.FormatValueMustBeProvidedInMessage(
+                                    nameof(message.Data),
+                                    RazorPluginMessageTypes.ResolveTagHelperDescriptors));
+                        }
 
-                    _messageBroker.SendMessage(responseMessage);
-                    break;
-                default:
-                    // Unknown message.
-                    return false;
+                        var messageData = message.Data.ToObject<ResolveTagHelperDescriptorsRequestData>();
+
+                        if (messageData.AssemblyName == null)
+                        {
+                            throw new InvalidOperationException(
+                                Resources.FormatValueMustBeProvidedInMessage(
+                                    nameof(messageData.AssemblyName),
+                                    RazorPluginMessageTypes.ResolveTagHelperDescriptors));
+                        }
+                        else if (messageData.SourceLocation == SourceLocation.Undefined)
+                        {
+                            throw new InvalidOperationException(
+                                Resources.FormatValueMustBeProvidedInMessage(
+                                    nameof(messageData.SourceLocation),
+                                    RazorPluginMessageTypes.ResolveTagHelperDescriptors));
+                        }
+
+                        var assemblyName = messageData.AssemblyName;
+                        var errorSink = new ErrorSink();
+                        var tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
+                        var tagHelperTypes = tagHelperTypeResolver.Resolve(
+                            assemblyName,
+                            messageData.SourceLocation,
+                            errorSink);
+                        var tagHelperDescriptors = tagHelperTypes.SelectMany(
+                            type => TagHelperDescriptorFactory.CreateDescriptors(
+                                assemblyName,
+                                type,
+                                designTime: true,
+                                errorSink: errorSink));
+
+                        var responseMessage = new ResolveTagHelperDescriptorsMessage(
+                            new ResolveTagHelperDescriptorsResponseData
+                            {
+                                AssemblyName = assemblyName,
+                                Descriptors = tagHelperDescriptors,
+                                Errors = errorSink.Errors
+                            });
+
+                        _messageBroker.SendMessage(responseMessage);
+                        break;
+                    default:
+                        // Unknown message.
+                        return false;
+                }
+
+                return true;
             }
-
-            return true;
+            else
+            {
+                // Unknown protocol
+                throw new InvalidOperationException(
+                    Resources.FormatInvalidProtocolValue(typeof(TagHelperDescriptor).FullName, Protocol));
+            }
         }
     }
 }

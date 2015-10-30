@@ -14,14 +14,16 @@ namespace Microsoft.AspNet.Tooling.Razor
             {
                 config.Description = "Resolves protocol used to resolve TagHeleprDescriptors.";
                 config.HelpOption("-?|-h|--help");
-                var clientProtocol = config.Argument(
+                var clientProtocolArgument = config.Argument(
                     "[clientProtocol]",
                     "Client protocol used to consume returned TagHelperDescriptors.");
 
                 config.OnExecute(() =>
                 {
                     var pluginProtocol = new RazorPlugin(messageBroker: null).Protocol;
-                    var resolvedProtocol = ResolveProtocol(clientProtocol.Value, pluginProtocol);
+                    var clientProtocolString = clientProtocolArgument.Value;
+                    var clientProtocol = int.Parse(clientProtocolString);
+                    var resolvedProtocol = ResolveProtocol(clientProtocol, pluginProtocol);
 
                     Console.WriteLine(resolvedProtocol);
 
@@ -30,25 +32,13 @@ namespace Microsoft.AspNet.Tooling.Razor
             });
         }
 
-        public static int ResolveProtocol(CommandOption clientProtocolCommand, int pluginProtocol)
+        /// <summary>
+        /// Internal for testing.
+        /// </summary>
+        internal static int ResolveProtocol(int clientProtocol, int pluginProtocol)
         {
-            int resolvedProtocol;
-            if (clientProtocolCommand.HasValue())
-            {
-                resolvedProtocol = ResolveProtocol(clientProtocolCommand.Value(), pluginProtocol);
-            }
-            else
-            {
-                // Client protocol wasn't provided, use the plugin's protocol.
-                resolvedProtocol = pluginProtocol;
-            }
-
-            return resolvedProtocol;
-        }
-
-        private static int ResolveProtocol(string clientProtocolString, int pluginProtocol)
-        {
-            var clientProtocol = int.Parse(clientProtocolString);
+            // Protocols start at 1 and increase.
+            clientProtocol = Math.Max(1, clientProtocol);
 
             // Client and plugin protocols are max values; meaning support is <= value. The goal in this method is
             // to return the maximum protocol supported by both parties (client and plugin).

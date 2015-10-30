@@ -24,9 +24,9 @@ namespace Microsoft.AspNet.Tooling.Razor
             {
                 config.Description = "Resolves TagHelperDescriptors in the specified assembly(s).";
                 config.HelpOption("-?|-h|--help");
-                var clientProtocol = config.Option(
+                var protocolOption = config.Option(
                     "-p|--protocol",
-                    "Provide client protocol version.",
+                    "Protocol to resolve TagHelperDescriptors with.",
                     CommandOptionType.SingleValue);
                 var assemblyNames = config.Argument(
                     "[name]",
@@ -37,9 +37,9 @@ namespace Microsoft.AspNet.Tooling.Razor
                 {
                     var messageBroker = new CommandMessageBroker();
                     var plugin = new RazorPlugin(messageBroker);
-                    var resolvedProtocol = ResolveProtocolCommand.ResolveProtocol(clientProtocol, plugin.Protocol);
+                    var protocol = int.Parse(protocolOption.Value());
 
-                    plugin.Protocol = resolvedProtocol;
+                    plugin.Protocol = protocol;
 
                     var success = true;
                     foreach (var assemblyName in assemblyNames.Values)

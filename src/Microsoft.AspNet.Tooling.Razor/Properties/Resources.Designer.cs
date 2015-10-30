@@ -11,6 +11,22 @@ namespace Microsoft.AspNet.Tooling.Razor
             = new ResourceManager("Microsoft.AspNet.Tooling.Razor.Resources", typeof(Resources).GetTypeInfo().Assembly);
 
         /// <summary>
+        /// '{0}'s cannot be resolved with protocol '{1}'. Protocol not supported.
+        /// </summary>
+        internal static string InvalidProtocolValue
+        {
+            get { return GetString("InvalidProtocolValue"); }
+        }
+
+        /// <summary>
+        /// '{0}'s cannot be resolved with protocol '{1}'. Protocol not supported.
+        /// </summary>
+        internal static string FormatInvalidProtocolValue(object p0, object p1)
+        {
+            return string.Format(CultureInfo.CurrentCulture, GetString("InvalidProtocolValue"), p0, p1);
+        }
+
+        /// <summary>
         /// '{0}' must be provided for a '{1}' message.
         /// </summary>
         internal static string ValueMustBeProvidedInMessage

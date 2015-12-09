@@ -11,17 +11,11 @@ namespace Microsoft.AspNet.Tooling.Razor
 {
     public class Program
     {
-        private readonly IAssemblyLoadContext _assemblyLoadContext;
-
-        public Program(IAssemblyLoadContextAccessor assemblyLoadContextAccessor)
-        {
-            _assemblyLoadContext = assemblyLoadContextAccessor.Default;
-        }
-
         public int Main(string[] args)
         {
             try
             {
+                var loadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
                 var app = new CommandLineApplication
                 {
                     Name = "razor-tooling",
@@ -32,7 +26,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 app.HelpOption("-?|-h|--help");
 
                 ResolveProtocolCommand.Register(app);
-                ResolveTagHelpersCommand.Register(app, _assemblyLoadContext);
+                ResolveTagHelpersCommand.Register(app, loadContext);
 
                 app.OnExecute(() =>
                 {

@@ -26,22 +26,6 @@ namespace Microsoft.AspNet.Tooling.Razor
             return string.Format(CultureInfo.CurrentCulture, GetString("InvalidProtocolValue"), p0, p1);
         }
 
-        /// <summary>
-        /// '{0}' must be provided for a '{1}' message.
-        /// </summary>
-        internal static string ValueMustBeProvidedInMessage
-        {
-            get { return GetString("ValueMustBeProvidedInMessage"); }
-        }
-
-        /// <summary>
-        /// '{0}' must be provided for a '{1}' message.
-        /// </summary>
-        internal static string FormatValueMustBeProvidedInMessage(object p0, object p1)
-        {
-            return string.Format(CultureInfo.CurrentCulture, GetString("ValueMustBeProvidedInMessage"), p0, p1);
-        }
-
         private static string GetString(string name, params string[] formatterNames)
         {
             var value = _resourceManager.GetString(name);

@@ -3,8 +3,9 @@
 
 using System;
 using System.Reflection;
-using Microsoft.Extensions.PlatformAbstractions;
+using Microsoft.AspNet.Tooling.Razor.Internal;
 using Microsoft.Dnx.Runtime.Common.CommandLine;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Microsoft.AspNet.Tooling.Razor
 {

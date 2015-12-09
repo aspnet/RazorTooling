@@ -4,11 +4,11 @@
 using System;
 using Microsoft.Dnx.Runtime.Common.CommandLine;
 
-namespace Microsoft.AspNet.Tooling.Razor
+namespace Microsoft.AspNet.Tooling.Razor.Internal
 {
-    internal static class ResolveProtocolCommand
+    public static class ResolveProtocolCommand
     {
-        public static void Register(CommandLineApplication app)
+        internal static void Register(CommandLineApplication app)
         {
             app.Command("resolve-protocol", config =>
             {
@@ -20,7 +20,7 @@ namespace Microsoft.AspNet.Tooling.Razor
 
                 config.OnExecute(() =>
                 {
-                    var pluginProtocol = new RazorPlugin(messageBroker: null).Protocol;
+                    var pluginProtocol = new AssemblyTagHelperDescriptorResolver().Protocol;
                     var clientProtocolString = clientProtocolArgument.Value;
                     var clientProtocol = int.Parse(clientProtocolString);
                     var resolvedProtocol = ResolveProtocol(clientProtocol, pluginProtocol);
@@ -35,7 +35,7 @@ namespace Microsoft.AspNet.Tooling.Razor
         /// <summary>
         /// Internal for testing.
         /// </summary>
-        internal static int ResolveProtocol(int clientProtocol, int pluginProtocol)
+        public static int ResolveProtocol(int clientProtocol, int pluginProtocol)
         {
             // Protocols start at 1 and increase.
             clientProtocol = Math.Max(1, clientProtocol);

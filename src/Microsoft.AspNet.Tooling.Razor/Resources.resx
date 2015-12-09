@@ -120,7 +120,4 @@
   <data name="InvalidProtocolValue" xml:space="preserve">
     <value>'{0}'s cannot be resolved with protocol '{1}'. Protocol not supported.</value>
   </data>
-  <data name="ValueMustBeProvidedInMessage" xml:space="preserve">
-    <value>'{0}' must be provided for a '{1}' message.</value>
-  </data>
 </root>

@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Compilation.TagHelpers;
+using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.AspNet.Razor.TagHelpers;
 using Microsoft.AspNet.Razor.Test.Internal;
-using Microsoft.AspNet.Tooling.Razor.Tests;
 using Microsoft.Extensions.PlatformAbstractions;
 using Xunit;
 
@@ -18,14 +18,14 @@ namespace Microsoft.AspNet.Tooling.Razor
     {
         private const string DefaultPrefix = "";
 
-        private static readonly Type CustomTagHelperType = typeof(CustomTagHelper);
-        private static readonly string CustomTagHelperAssembly = CustomTagHelperType.Assembly.GetName().Name;
+        private static readonly TypeInfo CustomTagHelperTypeInfo = typeof(CustomTagHelper).GetTypeInfo();
+        private static readonly string CustomTagHelperAssembly = CustomTagHelperTypeInfo.Assembly.GetName().Name;
         private static readonly TagHelperDescriptor CustomTagHelperDescriptor =
             new TagHelperDescriptor
             {
                 Prefix = DefaultPrefix,
                 TagName = "custom",
-                TypeName = CustomTagHelperType.FullName,
+                TypeName = CustomTagHelperTypeInfo.FullName,
                 AssemblyName = CustomTagHelperAssembly
             };
 
@@ -40,7 +40,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             {
                 Protocol = protocol
             };
-            var assemblyLoadContext = new TestAssemblyLoadContext();
+            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
             var typeName = typeof(TagHelperDescriptor).FullName;
             var errorSink = new ErrorSink();
             var expectedMessage =
@@ -56,13 +56,12 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_ResolvesTagHelperDescriptors()
         {
             // Arrange
-            var assembly = new TestAssembly(typeof(CustomTagHelper));
-            var assemblyNameLookups = new Dictionary<string, Assembly>
+            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
             {
-                { CustomTagHelperAssembly, assembly }
+                { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(CustomTagHelper).GetTypeInfo()) } }
             };
-            var assemblyLoadContext = new TestAssemblyLoadContext(assemblyNameLookups);
-            var descriptorResolver = new AssemblyTagHelperDescriptorResolver();
+            var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
             var errorSink = new ErrorSink();
 
             // Act
@@ -80,25 +79,26 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_ResolvesDesignTimeTagHelperDescriptors()
         {
             // Arrange
-            var assembly = new TestAssembly(typeof(DesignTimeTagHelper));
-            var assemblyNameLookups = new Dictionary<string, Assembly>
+            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
             {
-                { CustomTagHelperAssembly, assembly }
+                { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(DesignTimeTagHelper).GetTypeInfo()) } }
             };
-            var assemblyLoadContext = new TestAssemblyLoadContext(assemblyNameLookups);
-            var descriptorResolver = new AssemblyTagHelperDescriptorResolver();
+            var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
             var expectedDescriptor = new TagHelperDescriptor
             {
                 Prefix = DefaultPrefix,
                 TagName = "design-time",
                 TypeName = typeof(DesignTimeTagHelper).FullName,
-                AssemblyName = typeof(DesignTimeTagHelper).Assembly.GetName().Name,
+                AssemblyName = typeof(DesignTimeTagHelper).GetTypeInfo().Assembly.GetName().Name,
                 AllowedChildren = new[] { "br" },
                 TagStructure = TagStructure.NormalOrSelfClosing,
+#if DNX451
                 DesignTimeDescriptor = new TagHelperDesignTimeDescriptor
                 {
                     OutputElementHint = "strong"
                 }
+#endif
             };
             var errorSink = new ErrorSink();
 
@@ -117,49 +117,61 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_CreatesErrors()
         {
             // Arrange
-            var assemblyLoadContext = new ThrowingAssemblyLoadContext("Invalid assembly");
-            var descriptorResolver = new AssemblyTagHelperDescriptorResolver();
+            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
+            {
+                { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(InvalidTagHelper).GetTypeInfo()) } }
+            };
+            var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
             var errorSink = new ErrorSink();
 
             // Act
-            var descriptors = descriptorResolver.Resolve("invalid", assemblyLoadContext, errorSink);
+            var descriptors = descriptorResolver.Resolve(CustomTagHelperAssembly, assemblyLoadContext, errorSink);
 
             // Assert
-            Assert.Empty(descriptors);
+            Assert.NotEmpty(descriptors);
             var error = Assert.Single(errorSink.Errors);
             Assert.Equal(
-                "Cannot resolve TagHelper containing assembly 'invalid'. Error: Invalid assembly: invalid",
+                "Tag helpers cannot target tag name 'inv@lid' because it contains a '@' character.",
                 error.Message,
                 StringComparer.Ordinal);
             Assert.Equal(SourceLocation.Zero, error.Location);
-            Assert.Equal(7, error.Length);
+            Assert.Equal(0, error.Length);
         }
 
-        private class ThrowingAssemblyLoadContext : TestAssemblyLoadContext, IAssemblyLoadContext
+        private class TestAssemblyTagHelperDescriptorResolver : AssemblyTagHelperDescriptorResolver
         {
-            private readonly string _errorMessage;
+            private readonly IDictionary<string, IEnumerable<ITypeInfo>> _assemblyTypeLookups;
 
-            public ThrowingAssemblyLoadContext(string errorMessage)
+            public TestAssemblyTagHelperDescriptorResolver(
+                IDictionary<string, IEnumerable<ITypeInfo>> assemblyTypeLookups)
             {
-                _errorMessage = errorMessage;
+                _assemblyTypeLookups = assemblyTypeLookups;
             }
 
-            Assembly IAssemblyLoadContext.Load(AssemblyName assemblyName)
+            protected override IEnumerable<ITypeInfo> GetTagHelperTypes(
+                string assemblyName,
+                IAssemblyLoadContext assemblyLoadContext,
+                ErrorSink errorSink)
             {
-                throw new Exception(_errorMessage + ": " + assemblyName.Name);
+                return _assemblyTypeLookups[assemblyName];
             }
         }
-    }
 
-    // Needs to be a public, non nested type to be a valid TagHelper
-    public class CustomTagHelper : TagHelper
-    {
-    }
+        private class CustomTagHelper : TagHelper
+        {
+        }
 
-    [RestrictChildren("br")]
-    [OutputElementHint("strong")]
-    [HtmlTargetElement("design-time", TagStructure = TagStructure.NormalOrSelfClosing)]
-    public class DesignTimeTagHelper : TagHelper
-    {
+        [RestrictChildren("br")]
+        [OutputElementHint("strong")]
+        [HtmlTargetElement("design-time", TagStructure = TagStructure.NormalOrSelfClosing)]
+        private class DesignTimeTagHelper : TagHelper
+        {
+        }
+
+        [HtmlTargetElement("inv@lid")]
+        private class InvalidTagHelper : TagHelper
+        {
+        }
     }
 }

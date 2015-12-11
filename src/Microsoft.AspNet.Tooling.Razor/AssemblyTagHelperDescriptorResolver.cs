@@ -3,7 +3,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Compilation.TagHelpers;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
@@ -32,14 +31,17 @@ namespace Microsoft.AspNet.Tooling.Razor
 
             if (Protocol == 1)
             {
-                var tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
-                var tagHelperTypes = tagHelperTypeResolver.Resolve(assemblyName, SourceLocation.Zero, errorSink);
-                var tagHelperDescriptors = tagHelperTypes.SelectMany(
-                    type => TagHelperDescriptorFactory.CreateDescriptors(
+                var tagHelperTypes = GetTagHelperTypes(assemblyName, assemblyLoadContext, errorSink);
+                var tagHelperDescriptors = new List<TagHelperDescriptor>();
+                foreach (var tagHelperType in tagHelperTypes)
+                {
+                    var descriptors = TagHelperDescriptorFactory.CreateDescriptors(
                         assemblyName,
-                        type,
+                        tagHelperType,
                         designTime: true,
-                        errorSink: errorSink));
+                        errorSink: errorSink);
+                    tagHelperDescriptors.AddRange(descriptors);
+                }
 
                 return tagHelperDescriptors;
             }
@@ -49,6 +51,20 @@ namespace Microsoft.AspNet.Tooling.Razor
                 throw new InvalidOperationException(
                     Resources.FormatInvalidProtocolValue(typeof(TagHelperDescriptor).FullName, Protocol));
             }
+        }
+
+        /// <summary>
+        /// Protected virtual for testing.
+        /// </summary>
+        protected virtual IEnumerable<ITypeInfo> GetTagHelperTypes(
+            string assemblyName,
+            IAssemblyLoadContext assemblyLoadContext,
+            ErrorSink errorSink)
+        {
+            var tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
+            var tagHelperTypes = tagHelperTypeResolver.Resolve(assemblyName, SourceLocation.Zero, errorSink);
+
+            return tagHelperTypes;
         }
     }
 }

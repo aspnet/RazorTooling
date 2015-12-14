@@ -7,14 +7,13 @@ using System.Linq;
 using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Compilation.TagHelpers;
 using Microsoft.Dnx.Runtime.Common.CommandLine;
-using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
 
 namespace Microsoft.AspNet.Tooling.Razor.Internal
 {
     public static class ResolveTagHelpersCommand
     {
-        internal static void Register(CommandLineApplication app, IAssemblyLoadContext assemblyLoadContext)
+        internal static void Register(CommandLineApplication app)
         {
             app.Command("resolve-taghelpers", config =>
             {
@@ -43,7 +42,7 @@ namespace Microsoft.AspNet.Tooling.Razor.Internal
                     for (var i = 0; i < assemblyNames.Values.Count; i++)
                     {
                         var assemblyName = assemblyNames.Values[i];
-                        var descriptors = descriptorResolver.Resolve(assemblyName, assemblyLoadContext, errorSink);
+                        var descriptors = descriptorResolver.Resolve(assemblyName, errorSink);
                         resolvedDescriptors.AddRange(descriptors);
                     }
 

@@ -6,34 +6,26 @@ using System.Collections.Generic;
 using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Compilation.TagHelpers;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Microsoft.AspNet.Tooling.Razor
 {
     public class AssemblyTagHelperDescriptorResolver
     {
         private readonly TagHelperDescriptorFactory _descriptorFactory = new TagHelperDescriptorFactory(designTime: true);
+        private readonly TagHelperTypeResolver _tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver();
 
         public int Protocol { get; set; } = 1;
 
-        public IEnumerable<TagHelperDescriptor> Resolve(
-            string assemblyName,
-            IAssemblyLoadContext assemblyLoadContext,
-            ErrorSink errorSink)
+        public IEnumerable<TagHelperDescriptor> Resolve(string assemblyName, ErrorSink errorSink)
         {
             if (assemblyName == null)
             {
                 throw new ArgumentNullException(nameof(assemblyName));
             }
 
-            if (assemblyLoadContext == null)
-            {
-                throw new ArgumentNullException(nameof(assemblyLoadContext));
-            }
-
             if (Protocol == 1)
             {
-                var tagHelperTypes = GetTagHelperTypes(assemblyName, assemblyLoadContext, errorSink);
+                var tagHelperTypes = GetTagHelperTypes(assemblyName, errorSink);
                 var tagHelperDescriptors = new List<TagHelperDescriptor>();
                 foreach (var tagHelperType in tagHelperTypes)
                 {
@@ -54,13 +46,9 @@ namespace Microsoft.AspNet.Tooling.Razor
         /// <summary>
         /// Protected virtual for testing.
         /// </summary>
-        protected virtual IEnumerable<ITypeInfo> GetTagHelperTypes(
-            string assemblyName,
-            IAssemblyLoadContext assemblyLoadContext,
-            ErrorSink errorSink)
+        protected virtual IEnumerable<ITypeInfo> GetTagHelperTypes(string assemblyName, ErrorSink errorSink)
         {
-            var tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(assemblyLoadContext);
-            var tagHelperTypes = tagHelperTypeResolver.Resolve(assemblyName, SourceLocation.Zero, errorSink);
+            var tagHelperTypes = _tagHelperTypeResolver.Resolve(assemblyName, SourceLocation.Zero, errorSink);
 
             return tagHelperTypes;
         }

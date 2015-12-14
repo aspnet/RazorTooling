@@ -9,7 +9,6 @@ using Microsoft.AspNet.Razor.Compilation.TagHelpers;
 using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.AspNet.Razor.TagHelpers;
 using Microsoft.AspNet.Razor.Test.Internal;
-using Microsoft.Extensions.PlatformAbstractions;
 using Xunit;
 
 namespace Microsoft.AspNet.Tooling.Razor
@@ -40,7 +39,6 @@ namespace Microsoft.AspNet.Tooling.Razor
             {
                 Protocol = protocol
             };
-            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
             var typeName = typeof(TagHelperDescriptor).FullName;
             var errorSink = new ErrorSink();
             var expectedMessage =
@@ -48,7 +46,7 @@ namespace Microsoft.AspNet.Tooling.Razor
 
             // Act & Assert
             var exception = Assert.Throws<InvalidOperationException>(
-                () => descriptorResolver.Resolve(CustomTagHelperAssembly, assemblyLoadContext, errorSink));
+                () => descriptorResolver.Resolve(CustomTagHelperAssembly, errorSink));
             Assert.Equal(expectedMessage, exception.Message, StringComparer.Ordinal);
         }
 
@@ -56,7 +54,6 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_ResolvesTagHelperDescriptors()
         {
             // Arrange
-            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
             var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
             {
                 { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(CustomTagHelper).GetTypeInfo()) } }
@@ -65,7 +62,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             var errorSink = new ErrorSink();
 
             // Act
-            var descriptors = descriptorResolver.Resolve(CustomTagHelperAssembly, assemblyLoadContext, errorSink);
+            var descriptors = descriptorResolver.Resolve(CustomTagHelperAssembly, errorSink);
 
             // Assert
             Assert.NotNull(descriptors);
@@ -79,7 +76,6 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_ResolvesDesignTimeTagHelperDescriptors()
         {
             // Arrange
-            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
             var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
             {
                 { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(DesignTimeTagHelper).GetTypeInfo()) } }
@@ -103,7 +99,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             var errorSink = new ErrorSink();
 
             // Act
-            var descriptors = descriptorResolver.Resolve(CustomTagHelperAssembly, assemblyLoadContext, errorSink);
+            var descriptors = descriptorResolver.Resolve(CustomTagHelperAssembly, errorSink);
 
             // Assert
             Assert.NotNull(descriptors);
@@ -117,7 +113,6 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_CreatesErrors()
         {
             // Arrange
-            var assemblyLoadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
             var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
             {
                 { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(InvalidTagHelper).GetTypeInfo()) } }
@@ -126,7 +121,7 @@ namespace Microsoft.AspNet.Tooling.Razor
             var errorSink = new ErrorSink();
 
             // Act
-            var descriptors = descriptorResolver.Resolve(CustomTagHelperAssembly, assemblyLoadContext, errorSink);
+            var descriptors = descriptorResolver.Resolve(CustomTagHelperAssembly, errorSink);
 
             // Assert
             Assert.NotEmpty(descriptors);
@@ -149,10 +144,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 _assemblyTypeLookups = assemblyTypeLookups;
             }
 
-            protected override IEnumerable<ITypeInfo> GetTagHelperTypes(
-                string assemblyName,
-                IAssemblyLoadContext assemblyLoadContext,
-                ErrorSink errorSink)
+            protected override IEnumerable<ITypeInfo> GetTagHelperTypes(string assemblyName, ErrorSink errorSink)
             {
                 return _assemblyTypeLookups[assemblyName];
             }

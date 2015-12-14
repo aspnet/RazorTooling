@@ -5,7 +5,6 @@ using System;
 using System.Reflection;
 using Microsoft.AspNet.Tooling.Razor.Internal;
 using Microsoft.Dnx.Runtime.Common.CommandLine;
-using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Microsoft.AspNet.Tooling.Razor
 {
@@ -15,7 +14,6 @@ namespace Microsoft.AspNet.Tooling.Razor
         {
             try
             {
-                var loadContext = PlatformServices.Default.AssemblyLoadContextAccessor.Default;
                 var app = new CommandLineApplication
                 {
                     Name = "razor-tooling",
@@ -26,7 +24,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 app.HelpOption("-?|-h|--help");
 
                 ResolveProtocolCommand.Register(app);
-                ResolveTagHelpersCommand.Register(app, loadContext);
+                ResolveTagHelpersCommand.Register(app);
 
                 app.OnExecute(() =>
                 {

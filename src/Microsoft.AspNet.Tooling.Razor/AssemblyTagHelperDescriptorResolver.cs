@@ -12,6 +12,8 @@ namespace Microsoft.AspNet.Tooling.Razor
 {
     public class AssemblyTagHelperDescriptorResolver
     {
+        private readonly TagHelperDescriptorFactory _descriptorFactory = new TagHelperDescriptorFactory(designTime: true);
+
         public int Protocol { get; set; } = 1;
 
         public IEnumerable<TagHelperDescriptor> Resolve(
@@ -35,11 +37,7 @@ namespace Microsoft.AspNet.Tooling.Razor
                 var tagHelperDescriptors = new List<TagHelperDescriptor>();
                 foreach (var tagHelperType in tagHelperTypes)
                 {
-                    var descriptors = TagHelperDescriptorFactory.CreateDescriptors(
-                        assemblyName,
-                        tagHelperType,
-                        designTime: true,
-                        errorSink: errorSink);
+                    var descriptors = _descriptorFactory.CreateDescriptors(assemblyName, tagHelperType, errorSink);
                     tagHelperDescriptors.AddRange(descriptors);
                 }
 

@@ -4,7 +4,7 @@
 using System;
 using System.Reflection;
 using Microsoft.AspNet.Tooling.Razor.Internal;
-using Microsoft.Dnx.Runtime.Common.CommandLine;
+using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.AspNet.Tooling.Razor
 {

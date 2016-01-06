@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Compilation.TagHelpers;
-using Microsoft.Dnx.Runtime.Common.CommandLine;
+using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
 namespace Microsoft.AspNet.Tooling.Razor.Internal

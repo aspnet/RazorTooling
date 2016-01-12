@@ -12,7 +12,7 @@ namespace Microsoft.AspNet.Tooling.Razor
     public class AssemblyTagHelperDescriptorResolver
     {
         private readonly TagHelperDescriptorFactory _descriptorFactory = new TagHelperDescriptorFactory(designTime: true);
-        private readonly TagHelperTypeResolver _tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver();
+        private readonly TagHelperTypeResolver _tagHelperTypeResolver = new TagHelperTypeResolver();
 
         public int Protocol { get; set; } = 1;
 
@@ -46,11 +46,9 @@ namespace Microsoft.AspNet.Tooling.Razor
         /// <summary>
         /// Protected virtual for testing.
         /// </summary>
-        protected virtual IEnumerable<ITypeInfo> GetTagHelperTypes(string assemblyName, ErrorSink errorSink)
+        protected virtual IEnumerable<Type> GetTagHelperTypes(string assemblyName, ErrorSink errorSink)
         {
-            var tagHelperTypes = _tagHelperTypeResolver.Resolve(assemblyName, SourceLocation.Zero, errorSink);
-
-            return tagHelperTypes;
+            return _tagHelperTypeResolver.Resolve(assemblyName, SourceLocation.Zero, errorSink);
         }
     }
 }

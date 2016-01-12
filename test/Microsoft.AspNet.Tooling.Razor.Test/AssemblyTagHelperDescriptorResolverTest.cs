@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.AspNet.Razor;
 using Microsoft.AspNet.Razor.Compilation.TagHelpers;
-using Microsoft.AspNet.Razor.Runtime.TagHelpers;
 using Microsoft.AspNet.Razor.TagHelpers;
 using Microsoft.AspNet.Razor.Test.Internal;
 using Xunit;
@@ -54,9 +53,9 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_ResolvesTagHelperDescriptors()
         {
             // Arrange
-            var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<Type>>
             {
-                { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(CustomTagHelper).GetTypeInfo()) } }
+                { CustomTagHelperAssembly, new[] { typeof(CustomTagHelper) } }
             };
             var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
             var errorSink = new ErrorSink();
@@ -76,9 +75,9 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_ResolvesDesignTimeTagHelperDescriptors()
         {
             // Arrange
-            var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<Type>>
             {
-                { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(DesignTimeTagHelper).GetTypeInfo()) } }
+                { CustomTagHelperAssembly, new[] { typeof(DesignTimeTagHelper) } }
             };
             var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
             var expectedDescriptor = new TagHelperDescriptor
@@ -113,9 +112,9 @@ namespace Microsoft.AspNet.Tooling.Razor
         public void Resolve_CreatesErrors()
         {
             // Arrange
-            var assemblyNameLookups = new Dictionary<string, IEnumerable<ITypeInfo>>
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<Type>>
             {
-                { CustomTagHelperAssembly, new[] { new RuntimeTypeInfo(typeof(InvalidTagHelper).GetTypeInfo()) } }
+                { CustomTagHelperAssembly, new[] { typeof(InvalidTagHelper) } }
             };
             var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
             var errorSink = new ErrorSink();
@@ -136,15 +135,15 @@ namespace Microsoft.AspNet.Tooling.Razor
 
         private class TestAssemblyTagHelperDescriptorResolver : AssemblyTagHelperDescriptorResolver
         {
-            private readonly IDictionary<string, IEnumerable<ITypeInfo>> _assemblyTypeLookups;
+            private readonly IDictionary<string, IEnumerable<Type>> _assemblyTypeLookups;
 
             public TestAssemblyTagHelperDescriptorResolver(
-                IDictionary<string, IEnumerable<ITypeInfo>> assemblyTypeLookups)
+                IDictionary<string, IEnumerable<Type>> assemblyTypeLookups)
             {
                 _assemblyTypeLookups = assemblyTypeLookups;
             }
 
-            protected override IEnumerable<ITypeInfo> GetTagHelperTypes(string assemblyName, ErrorSink errorSink)
+            protected override IEnumerable<Type> GetTagHelperTypes(string assemblyName, ErrorSink errorSink)
             {
                 return _assemblyTypeLookups[assemblyName];
             }

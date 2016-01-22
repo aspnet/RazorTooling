@@ -1,15 +1,15 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Microsoft.AspNet.Razor;
-using Microsoft.AspNet.Razor.Compilation.TagHelpers;
+using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
-namespace Microsoft.AspNet.Tooling.Razor.Internal
+namespace Microsoft.AspNetCore.Tooling.Razor.Internal
 {
     public static class ResolveTagHelpersCommand
     {

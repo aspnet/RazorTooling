@@ -1,16 +1,16 @@
-﻿// Copyright (c) .NET Foundation. All rights reserved.
+// Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using Microsoft.AspNet.Razor;
-using Microsoft.AspNet.Razor.Compilation.TagHelpers;
-using Microsoft.AspNet.Razor.TagHelpers;
-using Microsoft.AspNet.Razor.Test.Internal;
+using Microsoft.AspNetCore.Razor;
+using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
+using Microsoft.AspNetCore.Razor.Test.Internal;
 using Xunit;
 
-namespace Microsoft.AspNet.Tooling.Razor
+namespace Microsoft.AspNetCore.Tooling.Razor
 {
     public class RazorPluginTest
     {

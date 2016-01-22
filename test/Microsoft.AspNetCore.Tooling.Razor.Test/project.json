@@ -1,7 +1,7 @@
 {
   "dependencies": {
-    "Microsoft.AspNet.Tooling.Razor": "1.0.0-*",
-    "Microsoft.AspNet.Razor.Test.Sources": {
+    "Microsoft.AspNetCore.Tooling.Razor": "1.0.0-*",
+    "Microsoft.AspNetCore.Razor.Test.Sources": {
       "version": "4.0.0-*",
       "type": "build"
     },

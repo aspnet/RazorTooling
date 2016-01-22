@@ -5,7 +5,7 @@
     "keyFile": "../../tools/Key.snk"
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Razor.Runtime": "4.0.0-*",
+    "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
     "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
     "Newtonsoft.Json": "6.0.6"
   },

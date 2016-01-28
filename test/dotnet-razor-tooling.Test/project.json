@@ -1,0 +1,22 @@
+{
+  "testRunner": "xunit",
+  "frameworks": {
+    "dnxcore50": {
+      "dependencies": {
+        "dotnet-razor-tooling": "1.0.0-*",
+        "dotnet-test-xunit": "1.0.0-dev-*",
+        "Microsoft.AspNetCore.Razor.Test.Sources": {
+          "version": "1.0.0-*",
+          "type": "build"
+        },
+        "Microsoft.Extensions.HashCodeCombiner.Sources": {
+          "version": "1.0.0-*",
+          "type": "build"
+        },
+        "Microsoft.NETCore.Platforms": "1.0.1-*",
+        "xunit": "2.1.0"
+      },
+      "imports": "portable-net451+win8"
+    }
+  }
+}

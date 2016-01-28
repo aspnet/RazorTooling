@@ -4,13 +4,14 @@
 using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Tooling.Razor.Internal;
+using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.AspNetCore.Tooling.Razor
 {
     public class Program
     {
-        public int Main(string[] args)
+        public static int Main(string[] args)
         {
             try
             {
@@ -36,7 +37,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Error: {Environment.NewLine}{ex.Message}.");
+                Reporter.Error.WriteLine(ex.Message);
                 return 1;
             }
         }

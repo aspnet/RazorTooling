@@ -3,18 +3,33 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.Runtime.Loader;
+using dotnet_razor_tooling;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 
-namespace Microsoft.AspNetCore.Tooling.Razor
+namespace Microsoft.AspNetCore.Tooling.Razor.Internal
 {
     public class AssemblyTagHelperDescriptorResolver
     {
         private readonly TagHelperDescriptorFactory _descriptorFactory = new TagHelperDescriptorFactory(designTime: true);
-        private readonly TagHelperTypeResolver _tagHelperTypeResolver = new TagHelperTypeResolver();
+        private readonly TagHelperTypeResolver _tagHelperTypeResolver;
 
-        public int Protocol { get; set; } = 1;
+        public AssemblyTagHelperDescriptorResolver(AssemblyLoadContext loadContext)
+        {
+            if (loadContext == null)
+            {
+                throw new ArgumentNullException(nameof(loadContext));
+            }
+
+            _tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(loadContext);
+        }
+
+        public static int DefaultProtocolVersion { get; } = 1;
+
+        public int ProtocolVersion { get; set; } = DefaultProtocolVersion;
 
         public IEnumerable<TagHelperDescriptor> Resolve(string assemblyName, ErrorSink errorSink)
         {
@@ -23,7 +38,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor
                 throw new ArgumentNullException(nameof(assemblyName));
             }
 
-            if (Protocol == 1)
+            if (ProtocolVersion == 1)
             {
                 var tagHelperTypes = GetTagHelperTypes(assemblyName, errorSink);
                 var tagHelperDescriptors = new List<TagHelperDescriptor>();
@@ -39,7 +54,10 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             {
                 // Unknown protocol
                 throw new InvalidOperationException(
-                    Resources.FormatInvalidProtocolValue(typeof(TagHelperDescriptor).FullName, Protocol));
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        Resources.InvalidProtocolValue,
+                        typeof(TagHelperDescriptor).FullName, ProtocolVersion));
             }
         }
 

@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
+using Microsoft.DotNet.Cli.Utils;
+using Microsoft.DotNet.ProjectModel;
+using Microsoft.DotNet.ProjectModel.Loader;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
@@ -23,18 +26,37 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     "-p|--protocol",
                     "Protocol to resolve TagHelperDescriptors with.",
                     CommandOptionType.SingleValue);
+                var project = config.Argument(
+                    "[project]",
+                    "Path to the project.json for the project resolving TagHelperDescriptors.",
+                    multipleValues: false);
+                var framework = config.Argument(
+                    "[framework]",
+                    "The framework to resolve TagHelperDescriptors for.",
+                    multipleValues: false);
                 var assemblyNames = config.Argument(
-                    "[name]",
+                    "[assemblyName]",
                     "Assembly name to resolve TagHelperDescriptors in.",
                     multipleValues: true);
 
                 config.OnExecute(() =>
                 {
-                    var protocol = int.Parse(protocolOption.Value());
+                    var projectValue = project.Value;
+                    var frameworkValue = framework.Value;
+                    var projectContexts = ProjectContext.CreateContextForEachFramework(projectValue);
+                    var startupProjectContext = projectContexts
+                        .First(frameworkContext => string.Equals(
+                            frameworkContext.TargetFramework.Framework,
+                            frameworkValue,
+                            StringComparison.OrdinalIgnoreCase));
+                    var assemblyLoadContext = startupProjectContext.CreateLoadContext();
+                    var protocol = protocolOption.HasValue() ?
+                        int.Parse(protocolOption.Value()) :
+                        AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;
 
-                    var descriptorResolver = new AssemblyTagHelperDescriptorResolver
+                    var descriptorResolver = new AssemblyTagHelperDescriptorResolver(assemblyLoadContext)
                     {
-                        Protocol = protocol
+                        ProtocolVersion = protocol
                     };
 
                     var errorSink = new ErrorSink();
@@ -53,7 +75,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     };
                     var serializedResult = JsonConvert.SerializeObject(resolvedResult, Formatting.Indented);
 
-                    Console.WriteLine(serializedResult);
+                    Reporter.Output.WriteLine(serializedResult);
 
                     return errorSink.Errors.Any() ? 1 : 0;
                 });

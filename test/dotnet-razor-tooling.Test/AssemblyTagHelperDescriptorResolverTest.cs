@@ -4,10 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.Loader;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Razor.Test.Internal;
+using Microsoft.AspNetCore.Tooling.Razor.Internal;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Tooling.Razor
@@ -34,9 +36,9 @@ namespace Microsoft.AspNetCore.Tooling.Razor
         public void Resolve_ThrowsWhenInvalidProtocol(int protocol)
         {
             // Arrange
-            var descriptorResolver = new AssemblyTagHelperDescriptorResolver()
+            var descriptorResolver = new AssemblyTagHelperDescriptorResolver(new TestAssemblyLoadContext())
             {
-                Protocol = protocol
+                ProtocolVersion = protocol
             };
             var typeName = typeof(TagHelperDescriptor).FullName;
             var errorSink = new ErrorSink();
@@ -137,8 +139,8 @@ namespace Microsoft.AspNetCore.Tooling.Razor
         {
             private readonly IDictionary<string, IEnumerable<Type>> _assemblyTypeLookups;
 
-            public TestAssemblyTagHelperDescriptorResolver(
-                IDictionary<string, IEnumerable<Type>> assemblyTypeLookups)
+            public TestAssemblyTagHelperDescriptorResolver(IDictionary<string, IEnumerable<Type>> assemblyTypeLookups)
+                : base(new TestAssemblyLoadContext())
             {
                 _assemblyTypeLookups = assemblyTypeLookups;
             }
@@ -163,6 +165,14 @@ namespace Microsoft.AspNetCore.Tooling.Razor
         [HtmlTargetElement("inv@lid")]
         private class InvalidTagHelper : TagHelper
         {
+        }
+
+        private class TestAssemblyLoadContext : AssemblyLoadContext
+        {
+            protected override Assembly Load(AssemblyName assemblyName)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

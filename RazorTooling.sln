@@ -1,20 +1,20 @@
-
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Tooling.Razor", "src\Microsoft.AspNetCore.Tooling.Razor\Microsoft.AspNetCore.Tooling.Razor.xproj", "{6F1CAB8C-2315-46BB-B9B4-00564743590C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{253024B2-368B-4B24-9CD3-D48E9C1EC948}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DD6FF0B4-42E6-456F-A475-76101CF8CB11}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
+		NuGet.config = NuGet.config
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{8D49C692-BA71-43C4-927F-E9E2BA8FC795}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Tooling.Razor.Test", "test\Microsoft.AspNetCore.Tooling.Razor.Test\Microsoft.AspNetCore.Tooling.Razor.Test.xproj", "{AB04D3BA-0A35-4502-AD4F-E8D1B38A6E5B}"
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dotnet-razor-tooling.Test", "test\dotnet-razor-tooling.Test\dotnet-razor-tooling.Test.xproj", "{AB04D3BA-0A35-4502-AD4F-E8D1B38A6E5B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dotnet-razor-tooling", "src\dotnet-razor-tooling\dotnet-razor-tooling.xproj", "{6F1CAB8C-2315-46BB-B9B4-00564743590C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -22,20 +22,20 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AB04D3BA-0A35-4502-AD4F-E8D1B38A6E5B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AB04D3BA-0A35-4502-AD4F-E8D1B38A6E5B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB04D3BA-0A35-4502-AD4F-E8D1B38A6E5B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB04D3BA-0A35-4502-AD4F-E8D1B38A6E5B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6F1CAB8C-2315-46BB-B9B4-00564743590C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{6F1CAB8C-2315-46BB-B9B4-00564743590C} = {253024B2-368B-4B24-9CD3-D48E9C1EC948}
 		{AB04D3BA-0A35-4502-AD4F-E8D1B38A6E5B} = {8D49C692-BA71-43C4-927F-E9E2BA8FC795}
+		{6F1CAB8C-2315-46BB-B9B4-00564743590C} = {253024B2-368B-4B24-9CD3-D48E9C1EC948}
 	EndGlobalSection
 EndGlobal

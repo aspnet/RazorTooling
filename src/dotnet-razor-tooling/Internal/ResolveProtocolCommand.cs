@@ -2,6 +2,8 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
+using System.Globalization;
+using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.AspNetCore.Tooling.Razor.Internal
@@ -20,12 +22,12 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
 
                 config.OnExecute(() =>
                 {
-                    var pluginProtocol = new AssemblyTagHelperDescriptorResolver().Protocol;
+                    var pluginProtocol = AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;
                     var clientProtocolString = clientProtocolArgument.Value;
                     var clientProtocol = int.Parse(clientProtocolString);
                     var resolvedProtocol = ResolveProtocol(clientProtocol, pluginProtocol);
 
-                    Console.WriteLine(resolvedProtocol);
+                    Reporter.Output.WriteLine(resolvedProtocol.ToString(CultureInfo.InvariantCulture));
 
                     return 0;
                 });

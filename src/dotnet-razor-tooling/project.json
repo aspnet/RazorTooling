@@ -18,7 +18,7 @@
         "Microsoft.DotNet.ProjectModel.Loader": "1.0.0-*",
         "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
         "Newtonsoft.Json": "8.0.2",
-        "System.Runtime.Serialization.Primitives": "4.0.11-beta-23409",
+        "System.Runtime.Serialization.Primitives": "4.1.0-*",
         "NETStandard.Library": "1.0.0-*",
         "Microsoft.NETCore.Platforms": "1.0.1-*"
       },

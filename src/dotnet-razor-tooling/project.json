@@ -8,7 +8,9 @@
   "compilationOptions": {
     "keyFile": "../../tools/Key.snk",
     "warningsAsErrors": true,
-    "emitEntryPoint": true
+    "emitEntryPoint": true,
+    "nowarn": [ "CS1591" ],
+    "xmlDoc": true
   },
   "frameworks": {
     "dnxcore50": {

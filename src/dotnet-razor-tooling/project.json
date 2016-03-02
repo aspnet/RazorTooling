@@ -9,13 +9,11 @@
     "keyFile": "../../tools/Key.snk",
     "warningsAsErrors": true,
     "emitEntryPoint": true,
-    "nowarn": [
-      "CS1591"
-    ],
+    "nowarn": [ "CS1591" ],
     "xmlDoc": true
   },
   "frameworks": {
-    "netstandardapp1.5": {
+    "dnxcore50": {
       "dependencies": {
         "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
         "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
@@ -26,10 +24,7 @@
         "NETStandard.Library": "1.0.0-*",
         "Microsoft.NETCore.Platforms": "1.0.1-*"
       },
-      "imports": [
-        "dnxcore50",
-        "portable-net451+win8"
-      ]
+      "imports": "portable-net451+win8"
     }
   }
 }

@@ -77,7 +77,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
 
                     Reporter.Output.WriteLine(serializedResult);
 
-                    return errorSink.Errors.Any() ? 1 : 0;
+                    return 0;
                 });
             });
         }

@@ -22,7 +22,24 @@ namespace Microsoft.AspNetCore.Tooling.Razor
                 AllowedChildren = new[] { "tr", "td" },
                 AssemblyName = "CustomAssembly",
                 Prefix = "th:",
-                RequiredAttributes = new[] { "runat" },
+                RequiredAttributes = new[]
+                {
+                    new TagHelperRequiredAttributeDescriptor
+                    {
+                        Name = "runat"
+                    },
+                    new TagHelperRequiredAttributeDescriptor
+                    {
+                        Name = "condition",
+                        Value = "(",
+                        ValueComparison = TagHelperRequiredAttributeValueComparison.PrefixMatch
+                    },
+                    new TagHelperRequiredAttributeDescriptor
+                    {
+                        Name = "runat-",
+                        NameComparison = TagHelperRequiredAttributeNameComparison.PrefixMatch
+                    },
+                },
                 RequiredParent = "body",
                 TagName = "custom-table",
                 TagStructure = TagStructure.NormalOrSelfClosing,
@@ -69,7 +86,24 @@ namespace Microsoft.AspNetCore.Tooling.Razor
                 AllowedChildren = new[] { "tr", "td" },
                 AssemblyName = "CustomAssembly",
                 Prefix = "th:",
-                RequiredAttributes = new[] { "runat" },
+                RequiredAttributes = new[]
+                {
+                    new VisualStudioTagHelperRequiredAttributeDescriptor
+                    {
+                        Name = "runat"
+                    },
+                    new VisualStudioTagHelperRequiredAttributeDescriptor
+                    {
+                        Name = "condition",
+                        Value = "(",
+                        ValueComparison = VisualStudioTagHelperRequiredAttributeValueComparison.PrefixMatch
+                    },
+                    new VisualStudioTagHelperRequiredAttributeDescriptor
+                    {
+                        Name = "runat-",
+                        NameComparison = VisualStudioTagHelperRequiredAttributeNameComparison.PrefixMatch
+                    },
+                },
                 RequiredParent = "body",
                 TagName = "custom-table",
                 TagStructure = VisualStudioTagStructure.NormalOrSelfClosing,
@@ -121,7 +155,19 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             Assert.Equal(expectedVSDescriptor.AllowedChildren, vsDescriptor.AllowedChildren, StringComparer.Ordinal);
             Assert.Equal(expectedVSDescriptor.AssemblyName, vsDescriptor.AssemblyName, StringComparer.Ordinal);
             Assert.Equal(expectedVSDescriptor.Prefix, vsDescriptor.Prefix, StringComparer.Ordinal);
-            Assert.Equal(expectedVSDescriptor.RequiredAttributes, vsDescriptor.RequiredAttributes, StringComparer.Ordinal);
+
+            var requiredAttributes = vsDescriptor.RequiredAttributes.ToArray();
+            var expectedRequiredAttributes = expectedVSDescriptor.RequiredAttributes.ToArray();
+            for (var i = 0; i < requiredAttributes.Length; i++)
+            {
+                var requiredAttribute = requiredAttributes[i];
+                var expectedRequiredAttribute = expectedRequiredAttributes[i];
+                Assert.Equal(expectedRequiredAttribute.Name, requiredAttribute.Name, StringComparer.Ordinal);
+                Assert.Equal(expectedRequiredAttribute.NameComparison, requiredAttribute.NameComparison);
+                Assert.Equal(expectedRequiredAttribute.Value, requiredAttribute.Value, StringComparer.Ordinal);
+                Assert.Equal(expectedRequiredAttribute.ValueComparison, requiredAttribute.ValueComparison);
+            }
+
             Assert.Equal(expectedVSDescriptor.RequiredParent, vsDescriptor.RequiredParent, StringComparer.Ordinal);
             Assert.Equal(expectedVSDescriptor.TagName, vsDescriptor.TagName, StringComparer.Ordinal);
             Assert.Equal(expectedVSDescriptor.TagStructure, vsDescriptor.TagStructure);
@@ -250,7 +296,8 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             private string _assemblyName;
             private IEnumerable<VisualStudioTagHelperAttributeDescriptor> _attributes =
                 Enumerable.Empty<VisualStudioTagHelperAttributeDescriptor>();
-            private IEnumerable<string> _requiredAttributes = Enumerable.Empty<string>();
+            private IEnumerable<VisualStudioTagHelperRequiredAttributeDescriptor> _requiredAttributes =
+                Enumerable.Empty<VisualStudioTagHelperRequiredAttributeDescriptor>();
 
             public string Prefix
             {
@@ -339,7 +386,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor
                     _attributes = value;
                 }
             }
-            public IEnumerable<string> RequiredAttributes
+            public IEnumerable<VisualStudioTagHelperRequiredAttributeDescriptor> RequiredAttributes
             {
                 get
                 {
@@ -365,6 +412,25 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             Unspecified,
             NormalOrSelfClosing,
             WithoutEndTag
+        }
+        public class VisualStudioTagHelperRequiredAttributeDescriptor
+        {
+            public string Name { get; set; }
+            public VisualStudioTagHelperRequiredAttributeNameComparison NameComparison { get; set; }
+            public string Value { get; set; }
+            public VisualStudioTagHelperRequiredAttributeValueComparison ValueComparison { get; set; }
+        }
+        public enum VisualStudioTagHelperRequiredAttributeNameComparison
+        {
+            FullMatch,
+            PrefixMatch,
+        }
+        public enum VisualStudioTagHelperRequiredAttributeValueComparison
+        {
+            None,
+            FullMatch,
+            PrefixMatch,
+            SuffixMatch,
         }
         #endregion
     }

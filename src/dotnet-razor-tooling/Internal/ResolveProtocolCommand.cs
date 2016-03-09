@@ -34,9 +34,6 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
             });
         }
 
-        /// <summary>
-        /// Internal for testing.
-        /// </summary>
         public static int ResolveProtocol(int clientProtocol, int pluginProtocol)
         {
             // Protocols start at 1 and increase.

@@ -3,7 +3,9 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using dotnet_razor_tooling;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.DotNet.Cli.Utils;
@@ -30,10 +32,6 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     "[project]",
                     "Path to the project.json for the project resolving TagHelperDescriptors.",
                     multipleValues: false);
-                var framework = config.Argument(
-                    "[framework]",
-                    "The framework to resolve TagHelperDescriptors for.",
-                    multipleValues: false);
                 var assemblyNames = config.Argument(
                     "[assemblyName]",
                     "Assembly name to resolve TagHelperDescriptors in.",
@@ -41,15 +39,9 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
 
                 config.OnExecute(() =>
                 {
-                    var projectValue = project.Value;
-                    var frameworkValue = framework.Value;
-                    var projectContexts = ProjectContext.CreateContextForEachFramework(projectValue);
-                    var startupProjectContext = projectContexts
-                        .First(frameworkContext => string.Equals(
-                            frameworkContext.TargetFramework.Framework,
-                            frameworkValue,
-                            StringComparison.OrdinalIgnoreCase));
-                    var assemblyLoadContext = startupProjectContext.CreateLoadContext();
+                    var projectFilePath = project.Value;
+                    var projectContext = ResolveProjectContext(projectFilePath);
+                    var assemblyLoadContext = projectContext.CreateLoadContext();
                     var protocol = protocolOption.HasValue() ?
                         int.Parse(protocolOption.Value()) :
                         AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;
@@ -80,6 +72,20 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     return 0;
                 });
             });
+        }
+
+        public static ProjectContext ResolveProjectContext(string projectFilePath)
+        {
+            var projectContexts = ProjectContext.CreateContextForEachFramework(projectFilePath);
+            var projectContext = projectContexts.FirstOrDefault();
+
+            if (projectContext == null)
+            {
+                throw new InvalidOperationException(
+                    string.Format(CultureInfo.CurrentCulture, Resources.InvalidProjectFile, projectFilePath));
+            }
+
+            return projectContext;
         }
 
         private class ResolvedTagHelperDescriptorsResult

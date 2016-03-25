@@ -13,17 +13,20 @@
     "xmlDoc": true
   },
   "frameworks": {
-    "dnxcore50": {
+    "netstandard1.5": {
       "dependencies": {
         "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
         "Microsoft.DotNet.ProjectModel.Loader": "1.0.0-*",
         "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
-        "NETStandard.Library": "1.5.0-*",
+        "Microsoft.NETCore.App": {
+          "type": "platform",
+          "version": "1.0.0-*"
+        },
         "Newtonsoft.Json": "8.0.3",
         "System.Diagnostics.Process": "4.1.0-*",
         "System.Runtime.Serialization.Primitives": "4.1.1-*"
       },
-      "imports": "portable-net451+win8"
+      "imports": [ "portable-net451+win8", "dnxcore50" ]
     }
   }
 }

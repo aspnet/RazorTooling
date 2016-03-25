@@ -90,12 +90,10 @@ namespace Microsoft.AspNetCore.Tooling.Razor
                 AssemblyName = typeof(DesignTimeTagHelper).GetTypeInfo().Assembly.GetName().Name,
                 AllowedChildren = new[] { "br" },
                 TagStructure = TagStructure.NormalOrSelfClosing,
-#if DNX451
                 DesignTimeDescriptor = new TagHelperDesignTimeDescriptor
                 {
                     OutputElementHint = "strong"
                 }
-#endif
             };
             var errorSink = new ErrorSink();
 

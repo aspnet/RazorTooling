@@ -28,6 +28,10 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     "-p|--protocol",
                     "Protocol to resolve TagHelperDescriptors with.",
                     CommandOptionType.SingleValue);
+                var binDirectory = config.Option(
+                    "-b|--bin-dir",
+                    "The project's bin directory.",
+                    CommandOptionType.SingleValue);
                 var project = config.Argument(
                     "[project]",
                     "Path to the project.json for the project resolving TagHelperDescriptors.",
@@ -41,7 +45,8 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                 {
                     var projectFilePath = project.Value;
                     var projectContext = ResolveProjectContext(projectFilePath);
-                    var assemblyLoadContext = projectContext.CreateLoadContext();
+                    var binDirectoryValue = binDirectory.Value();
+                    var assemblyLoadContext = projectContext.CreateLoadContext(outputPath: binDirectoryValue);
                     var protocol = protocolOption.HasValue() ?
                         int.Parse(protocolOption.Value()) :
                         AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;

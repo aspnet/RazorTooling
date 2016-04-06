@@ -4,7 +4,6 @@
 using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Tooling.Razor.Internal;
-using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.AspNetCore.Tooling.Razor
@@ -37,7 +36,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             }
             catch (Exception ex)
             {
-                Reporter.Error.WriteLine(ex.Message);
+                Console.Error.WriteLine(ex.Message);
                 return 1;
             }
         }

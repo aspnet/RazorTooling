@@ -8,7 +8,6 @@ using System.Linq;
 using dotnet_razor_tooling;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
-using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.DotNet.ProjectModel.Loader;
 using Microsoft.Extensions.CommandLineUtils;
@@ -72,7 +71,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     };
                     var serializedResult = JsonConvert.SerializeObject(resolvedResult, Formatting.Indented);
 
-                    Reporter.Output.WriteLine(serializedResult);
+                    Console.WriteLine(serializedResult);
 
                     return 0;
                 });

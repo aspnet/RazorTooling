@@ -3,7 +3,6 @@
 
 using System;
 using System.Globalization;
-using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.AspNetCore.Tooling.Razor.Internal
@@ -27,7 +26,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     var clientProtocol = int.Parse(clientProtocolString);
                     var resolvedProtocol = ResolveProtocol(clientProtocol, pluginProtocol);
 
-                    Reporter.Output.WriteLine(resolvedProtocol.ToString(CultureInfo.InvariantCulture));
+                    Console.WriteLine(resolvedProtocol.ToString(CultureInfo.InvariantCulture));
 
                     return 0;
                 });

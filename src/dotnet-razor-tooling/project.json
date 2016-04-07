@@ -19,9 +19,9 @@
         "Microsoft.DotNet.ProjectModel.Loader": "1.0.0-*",
         "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
         "NETStandard.Library": "1.5.0-*",
-        "System.Diagnostics.Process": "4.1.0-*",
         "Newtonsoft.Json": "8.0.3",
-        "System.Runtime.Serialization.Primitives": "4.1.0-*"
+        "System.Diagnostics.Process": "4.1.0-*",
+        "System.Runtime.Serialization.Primitives": "4.1.1-*"
       },
       "imports": "portable-net451+win8"
     }

@@ -12,21 +12,28 @@
     "nowarn": [ "CS1591" ],
     "xmlDoc": true
   },
+  "dependencies": {
+    "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
+    "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
+    "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
+    "Microsoft.Extensions.DotnetToolDispatcher.Sources": {
+      "type": "build",
+      "version": "1.0.0-*"
+    },
+    "Newtonsoft.Json": "8.0.3"
+  },
   "frameworks": {
     "netcoreapp1.0": {
       "dependencies": {
-        "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
-        "Microsoft.DotNet.ProjectModel.Loader": "1.0.0-*",
-        "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
         "Microsoft.NETCore.App": {
           "type": "platform",
           "version": "1.0.0-*"
         },
-        "Newtonsoft.Json": "8.0.3",
         "System.Diagnostics.Process": "4.1.0-*",
         "System.Runtime.Serialization.Primitives": "4.1.1-*"
       },
       "imports": [ "portable-net451+win8", "dnxcore50" ]
-    }
+    },
+    "net451": {}
   }
 }

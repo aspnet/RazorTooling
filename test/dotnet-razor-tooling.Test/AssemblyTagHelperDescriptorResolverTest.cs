@@ -36,7 +36,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor
         public void Resolve_ThrowsWhenInvalidProtocol(int protocol)
         {
             // Arrange
-            var descriptorResolver = new AssemblyTagHelperDescriptorResolver(new TestAssemblyLoadContext())
+            var descriptorResolver = new AssemblyTagHelperDescriptorResolver()
             {
                 ProtocolVersion = protocol
             };
@@ -138,7 +138,6 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             private readonly IDictionary<string, IEnumerable<Type>> _assemblyTypeLookups;
 
             public TestAssemblyTagHelperDescriptorResolver(IDictionary<string, IEnumerable<Type>> assemblyTypeLookups)
-                : base(new TestAssemblyLoadContext())
             {
                 _assemblyTypeLookups = assemblyTypeLookups;
             }
@@ -163,14 +162,6 @@ namespace Microsoft.AspNetCore.Tooling.Razor
         [HtmlTargetElement("inv@lid")]
         private class InvalidTagHelper : TagHelper
         {
-        }
-
-        private class TestAssemblyLoadContext : AssemblyLoadContext
-        {
-            protected override Assembly Load(AssemblyName assemblyName)
-            {
-                throw new NotImplementedException();
-            }
         }
     }
 }

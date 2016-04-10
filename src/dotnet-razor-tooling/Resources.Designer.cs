@@ -60,11 +60,20 @@ namespace dotnet_razor_tooling {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Could not resolve any target frameworks for file &apos;{0}&apos;..
+        ///    Looks up a localized string similar to Could not parse provided protocol &apos;{0}&apos;. Protocols should be valid int32 values..
         /// </summary>
-        public static string InvalidProjectFile {
+        public static string CouldNotParseProvidedProtocol {
             get {
-                return ResourceManager.GetString("InvalidProjectFile", resourceCulture);
+                return ResourceManager.GetString("CouldNotParseProvidedProtocol", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Failed to execute razor-tooling: &apos;{0}&apos;..
+        /// </summary>
+        public static string FailedToExecuteRazorTooling {
+            get {
+                return ResourceManager.GetString("FailedToExecuteRazorTooling", resourceCulture);
             }
         }
         
@@ -74,6 +83,15 @@ namespace dotnet_razor_tooling {
         public static string InvalidProtocolValue {
             get {
                 return ResourceManager.GetString("InvalidProtocolValue", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///    Looks up a localized string similar to Project &apos;{0}&apos; does not support the provided framework &apos;{1}&apos;..
+        /// </summary>
+        public static string ProjectDoesNotSupportProvidedFramework {
+            get {
+                return ResourceManager.GetString("ProjectDoesNotSupportProvidedFramework", resourceCulture);
             }
         }
     }

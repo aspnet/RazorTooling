@@ -33,7 +33,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     "Protocol to resolve TagHelperDescriptors with.",
                     CommandOptionType.SingleValue);
                 var buildBasePathOption = config.Option(
-                    "-b|--build-base",
+                    "-b|--build-base-path",
                     "The project's build base path directory.",
                     CommandOptionType.SingleValue);
                 var frameworkOption = config.Option(
@@ -113,7 +113,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                 .Build();
             var buildBasePathValue = buildBasePathOption.Value();
             var commandFactory = new ProjectDependenciesCommandFactory(
-                framework,
+                projectContext.TargetFramework,
                 configurationValue,
                 outputPath: null,
                 buildBasePath: buildBasePathValue,

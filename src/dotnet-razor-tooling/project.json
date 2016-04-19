@@ -19,7 +19,7 @@
     "Newtonsoft.Json": "8.0.3"
   },
   "frameworks": {
-    "netstandard1.5": {
+    "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
           "type": "platform",

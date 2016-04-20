@@ -16,6 +16,10 @@
     "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
     "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
+    "Microsoft.Extensions.DotnetToolDispatcher.Sources": {
+      "type": "build",
+      "version": "1.0.0-*"
+    },
     "Newtonsoft.Json": "8.0.3"
   },
   "frameworks": {

@@ -1,7 +1,6 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -12,6 +11,7 @@ using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Internal;
 using Microsoft.Extensions.PlatformAbstractions;
 using Newtonsoft.Json;
 using NuGet.Frameworks;
@@ -22,7 +22,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
     {
         private const string CommandName = "resolve-taghelpers";
 
-        internal static void Register(CommandLineApplication app, params string[] rawArgs)
+        internal static void Register(CommandLineApplication app, params string[] programArgs)
         {
             app.Command(CommandName, config =>
             {
@@ -46,20 +46,16 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                     CommandOptionType.SingleValue);
                 CommandArgument projectArgument = null;
 
-                if (rawArgs.Contains("--no-dispatch", StringComparer.OrdinalIgnoreCase))
-                {
-                    // Configuring so the app doesn't explode for unknown argument.
-                    config.Option(
-                        "--no-dispatch",
-                        "A flag indicating if the tool should dispatch its execution.",
-                        CommandOptionType.NoValue);
-                }
-                else
+                if (DotnetToolDispatcher.IsDispatcher(programArgs))
                 {
                     projectArgument = config.Argument(
                         "[project]",
                         "Path to the project.json for the project resolving TagHelperDescriptors.",
                         multipleValues: false);
+                }
+                else
+                {
+                    DotnetToolDispatcher.EnsureValidDispatchRecipient(config, programArgs);
                 }
 
                 var assemblyNamesArgument = config.Argument(
@@ -113,19 +109,10 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                 .WithRuntimeIdentifiers(runtimeIdentifiers)
                 .Build();
             var configurationValue = configurationOption.Value() ?? Constants.DefaultConfiguration;
-            var buildBasePathValue = buildBasePathOption.Value();
-            var commandFactory = new ProjectDependenciesCommandFactory(
-                projectContext.TargetFramework,
-                configurationValue,
-                outputPath: null,
-                buildBasePath: buildBasePathValue,
-                projectDirectory: projectContext.ProjectDirectory);
-
             var dispatchArgs = new List<string>
             {
                 CommandName,
                 assemblyNameArgument.Value,
-                "--no-dispatch"
             };
 
             if (protocolOption.HasValue())
@@ -133,15 +120,16 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                 dispatchArgs.Add("--protocol");
                 dispatchArgs.Add(protocolOption.Value());
             }
+            var dispatchCommand = DotnetToolDispatcher.CreateDispatchCommand(
+                dispatchArgs,
+                projectContext,
+                configurationOption.Value(),
+                outputPath: null,
+                buildBasePath: buildBasePathOption.Value());
 
             using (var errorWriter = new StringWriter())
             {
-                var commandExitCode = commandFactory
-                    .Create(
-                        PlatformServices.Default.Application.ApplicationName,
-                        dispatchArgs,
-                        projectContext.TargetFramework,
-                        configurationValue)
+                var commandExitCode = dispatchCommand
                     .ForwardStdErr(errorWriter)
                     .ForwardStdOut()
                     .Execute()

@@ -106,11 +106,13 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                 return 0;
             }
 
-            var configurationValue = configurationOption.Value() ?? Constants.DefaultConfiguration;
+            var runtimeIdentifiers = PlatformServices.Default.Runtime.GetAllCandidateRuntimeIdentifiers();
             var projectContext = new ProjectContextBuilder()
                 .WithProject(projectFile)
                 .WithTargetFramework(framework)
+                .WithRuntimeIdentifiers(runtimeIdentifiers)
                 .Build();
+            var configurationValue = configurationOption.Value() ?? Constants.DefaultConfiguration;
             var buildBasePathValue = buildBasePathOption.Value();
             var commandFactory = new ProjectDependenciesCommandFactory(
                 projectContext.TargetFramework,
@@ -160,9 +162,24 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
 
         private static int Run(CommandArgument assemblyNamesArgument, CommandOption protocolOption)
         {
-            var protocol = protocolOption.HasValue() ?
-                int.Parse(protocolOption.Value()) :
-                AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;
+            int protocol;
+            if (protocolOption.HasValue())
+            {
+                var protocolOptionValue = protocolOption.Value();
+                if (!int.TryParse(protocolOptionValue, out protocol))
+                {
+                    ReportError(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            Resources.CouldNotParseProvidedProtocol,
+                            protocolOptionValue));
+                    return 0;
+                }
+            }
+            else
+            {
+                protocol = AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;
+            }
 
             var descriptorResolver = new AssemblyTagHelperDescriptorResolver()
             {

@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="CouldNotParseProvidedProtocol" xml:space="preserve">
+    <value>Could not parse provided protocol '{0}'. Protocols should be valid int32 values.</value>
+  </data>
   <data name="FailedToExecuteRazorTooling" xml:space="preserve">
     <value>Failed to execute razor-tooling: '{0}'.</value>
   </data>

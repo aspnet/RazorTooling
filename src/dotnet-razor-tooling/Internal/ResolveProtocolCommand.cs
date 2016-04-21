@@ -3,6 +3,8 @@
 
 using System;
 using System.Globalization;
+using dotnet_razor_tooling;
+using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
 namespace Microsoft.AspNetCore.Tooling.Razor.Internal
@@ -23,10 +25,20 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
                 {
                     var pluginProtocol = AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;
                     var clientProtocolString = clientProtocolArgument.Value;
-                    var clientProtocol = int.Parse(clientProtocolString);
+                    int clientProtocol;
+                    if (!int.TryParse(clientProtocolString, out clientProtocol))
+                    {
+                        Reporter.Error.WriteLine(
+                            string.Format(
+                                CultureInfo.CurrentCulture,
+                                Resources.CouldNotParseProvidedProtocol,
+                                clientProtocolString));
+                        return 1;
+                    }
+
                     var resolvedProtocol = ResolveProtocol(clientProtocol, pluginProtocol);
 
-                    Console.WriteLine(resolvedProtocol.ToString(CultureInfo.InvariantCulture));
+                    Reporter.Output.WriteLine(resolvedProtocol.ToString(CultureInfo.InvariantCulture));
 
                     return 0;
                 });

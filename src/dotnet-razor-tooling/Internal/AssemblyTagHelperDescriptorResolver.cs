@@ -4,7 +4,6 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Runtime.Loader;
 using dotnet_razor_tooling;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
@@ -17,14 +16,9 @@ namespace Microsoft.AspNetCore.Tooling.Razor.Internal
         private readonly TagHelperDescriptorFactory _descriptorFactory = new TagHelperDescriptorFactory(designTime: true);
         private readonly TagHelperTypeResolver _tagHelperTypeResolver;
 
-        public AssemblyTagHelperDescriptorResolver(AssemblyLoadContext loadContext)
+        public AssemblyTagHelperDescriptorResolver()
         {
-            if (loadContext == null)
-            {
-                throw new ArgumentNullException(nameof(loadContext));
-            }
-
-            _tagHelperTypeResolver = new AssemblyLoadContextTagHelperTypeResolver(loadContext);
+            _tagHelperTypeResolver = new TagHelperTypeResolver();
         }
 
         public static int DefaultProtocolVersion { get; } = 1;

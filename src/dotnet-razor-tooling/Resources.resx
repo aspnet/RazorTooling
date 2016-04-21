@@ -117,10 +117,16 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="InvalidProjectFile" xml:space="preserve">
-    <value>Could not resolve any target frameworks for file '{0}'.</value>
+  <data name="CouldNotParseProvidedProtocol" xml:space="preserve">
+    <value>Could not parse provided protocol '{0}'. Protocols should be valid int32 values.</value>
+  </data>
+  <data name="FailedToExecuteRazorTooling" xml:space="preserve">
+    <value>Failed to execute razor-tooling: '{0}'.</value>
   </data>
   <data name="InvalidProtocolValue" xml:space="preserve">
     <value>'{0}'s cannot be resolved with protocol '{1}'. Protocol not supported.</value>
+  </data>
+  <data name="ProjectDoesNotSupportProvidedFramework" xml:space="preserve">
+    <value>Project '{0}' does not support the provided framework '{1}'.</value>
   </data>
 </root>

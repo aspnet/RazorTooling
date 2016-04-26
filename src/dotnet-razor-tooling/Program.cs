@@ -4,7 +4,9 @@
 using System;
 using System.Reflection;
 using Microsoft.AspNetCore.Tooling.Razor.Internal;
+using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
+using Microsoft.Extensions.Internal;
 
 namespace Microsoft.AspNetCore.Tooling.Razor
 {
@@ -24,7 +26,17 @@ namespace Microsoft.AspNetCore.Tooling.Razor
                 app.HelpOption("-?|-h|--help");
 
                 ResolveProtocolCommand.Register(app);
-                ResolveTagHelpersCommand.Register(app);
+
+                if (DotnetToolDispatcher.IsDispatcher(args))
+                {
+                    ResolveTagHelpersCommandBase.Register<ResolveTagHelpersDispatchCommand>(app);
+                }
+                else
+                {
+                    DotnetToolDispatcher.EnsureValidDispatchRecipient(ref args);
+
+                    ResolveTagHelpersCommandBase.Register<ResolveTagHelpersRunCommand>(app);
+                }
 
                 app.OnExecute(() =>
                 {
@@ -36,7 +48,7 @@ namespace Microsoft.AspNetCore.Tooling.Razor
             }
             catch (Exception ex)
             {
-                Console.Error.WriteLine(ex.Message);
+                Reporter.Error.WriteLine(ex.Message);
                 return 1;
             }
         }

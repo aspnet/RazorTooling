@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Razor.Test.Internal;
-using Microsoft.AspNetCore.Tooling.Razor.Internal;
+using Microsoft.AspNetCore.Razor.Tools.Internal;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Tooling.Razor

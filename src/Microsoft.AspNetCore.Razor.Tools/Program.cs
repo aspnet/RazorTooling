@@ -3,12 +3,12 @@
 
 using System;
 using System.Reflection;
-using Microsoft.AspNetCore.Tooling.Razor.Internal;
+using Microsoft.AspNetCore.Razor.Tools.Internal;
 using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Internal;
 
-namespace Microsoft.AspNetCore.Tooling.Razor
+namespace Microsoft.AspNetCore.Razor.Tools
 {
     public class Program
     {

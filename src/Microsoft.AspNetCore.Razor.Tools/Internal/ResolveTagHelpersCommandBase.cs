@@ -9,7 +9,7 @@ using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
-namespace Microsoft.AspNetCore.Tooling.Razor.Internal
+namespace Microsoft.AspNetCore.Razor.Tools.Internal
 {
     public abstract class ResolveTagHelpersCommandBase
     {

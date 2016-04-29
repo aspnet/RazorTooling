@@ -5,14 +5,14 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using dotnet_razor_tooling;
+using Microsoft.AspNetCore.Razor.Tools;
 using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Internal;
 using NuGet.Frameworks;
 
-namespace Microsoft.AspNetCore.Tooling.Razor.Internal
+namespace Microsoft.AspNetCore.Razor.Tools.Internal
 {
     public class ResolveTagHelpersDispatchCommand : ResolveTagHelpersCommandBase
     {

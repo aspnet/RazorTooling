@@ -4,12 +4,12 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using dotnet_razor_tooling;
 using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
+using Microsoft.AspNetCore.Razor.Tools;
 
-namespace Microsoft.AspNetCore.Tooling.Razor.Internal
+namespace Microsoft.AspNetCore.Razor.Tools.Internal
 {
     public class AssemblyTagHelperDescriptorResolver
     {

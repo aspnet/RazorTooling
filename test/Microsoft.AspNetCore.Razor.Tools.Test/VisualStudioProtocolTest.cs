@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Razor.TagHelpers;
 using Newtonsoft.Json;
 using Xunit;
 
-namespace Microsoft.AspNetCore.Tooling.Razor
+namespace Microsoft.AspNetCore.Razor.Tools
 {
     public class VisualStudioProtocolTest
     {

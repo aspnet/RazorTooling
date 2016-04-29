@@ -3,11 +3,11 @@
 
 using System;
 using System.Globalization;
-using dotnet_razor_tooling;
+using Microsoft.AspNetCore.Razor.Tools;
 using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace Microsoft.AspNetCore.Tooling.Razor.Internal
+namespace Microsoft.AspNetCore.Razor.Tools.Internal
 {
     public static class ResolveProtocolCommand
     {

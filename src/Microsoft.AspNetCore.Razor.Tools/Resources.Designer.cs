@@ -8,11 +8,11 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace dotnet_razor_tooling {
+namespace Microsoft.AspNetCore.Razor.Tools {
     using System;
     using System.Reflection;
-    
-    
+
+
     /// <summary>
     ///    A strongly-typed resource class, for looking up localized strings, etc.
     /// </summary>
@@ -23,14 +23,14 @@ namespace dotnet_razor_tooling {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
     public class Resources {
-        
+
         private static global::System.Resources.ResourceManager resourceMan;
-        
+
         private static global::System.Globalization.CultureInfo resourceCulture;
-        
+
         internal Resources() {
         }
-        
+
         /// <summary>
         ///    Returns the cached ResourceManager instance used by this class.
         /// </summary>
@@ -38,13 +38,13 @@ namespace dotnet_razor_tooling {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("dotnet-razor-tooling.Resources", typeof(Resources).GetTypeInfo().Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("Microsoft.AspNetCore.Razor.Tools.Resources", typeof(Resources).GetTypeInfo().Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
             }
         }
-        
+
         /// <summary>
         ///    Overrides the current thread's CurrentUICulture property for all
         ///    resource lookups using this strongly typed resource class.
@@ -58,7 +58,7 @@ namespace dotnet_razor_tooling {
                 resourceCulture = value;
             }
         }
-        
+
         /// <summary>
         ///    Looks up a localized string similar to Could not parse provided protocol &apos;{0}&apos;. Protocols should be valid int32 values..
         /// </summary>
@@ -67,7 +67,7 @@ namespace dotnet_razor_tooling {
                 return ResourceManager.GetString("CouldNotParseProvidedProtocol", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///    Looks up a localized string similar to Failed to execute razor-tooling: &apos;{0}&apos;..
         /// </summary>
@@ -76,7 +76,7 @@ namespace dotnet_razor_tooling {
                 return ResourceManager.GetString("FailedToExecuteRazorTooling", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///    Looks up a localized string similar to &apos;{0}&apos;s cannot be resolved with protocol &apos;{1}&apos;. Protocol not supported..
         /// </summary>
@@ -85,7 +85,7 @@ namespace dotnet_razor_tooling {
                 return ResourceManager.GetString("InvalidProtocolValue", resourceCulture);
             }
         }
-        
+
         /// <summary>
         ///    Looks up a localized string similar to Project &apos;{0}&apos; does not support the provided framework &apos;{1}&apos;..
         /// </summary>

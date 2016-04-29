@@ -1,10 +1,10 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
-using Microsoft.AspNetCore.Tooling.Razor.Internal;
+using Microsoft.AspNetCore.Razor.Tools.Internal;
 using Xunit;
 
-namespace Microsoft.AspNetCore.Tooling.Razor
+namespace Microsoft.AspNetCore.Razor.Tools
 {
     public class ResolveProtocolCommandTest
     {

@@ -1,16 +1,20 @@
 {
   "version": "1.0.0-*",
   "description": "TagHelper tooling for .NET Core CLI.",
-  "repository": {
-    "type": "git",
-    "url": "git://github.com/AspNet/RazorTooling"
+  "packOptions": {
+    "repository": {
+      "type": "git",
+      "url": "git://github.com/AspNet/RazorTooling"
+    }
   },
-  "compilationOptions": {
+  "buildOptions": {
     "outputName": "dotnet-razor-tooling",
     "keyFile": "../../tools/Key.snk",
     "warningsAsErrors": true,
     "emitEntryPoint": true,
-    "nowarn": [ "CS1591" ],
+    "nowarn": [
+      "CS1591"
+    ],
     "xmlDoc": true
   },
   "dependencies": {
@@ -33,7 +37,10 @@
         "System.Diagnostics.Process": "4.1.0-*",
         "System.Runtime.Serialization.Primitives": "4.1.1-*"
       },
-      "imports": [ "portable-net451+win8", "dnxcore50" ]
+      "imports": [
+        "portable-net451+win8",
+        "dnxcore50"
+      ]
     },
     "net451": {}
   }

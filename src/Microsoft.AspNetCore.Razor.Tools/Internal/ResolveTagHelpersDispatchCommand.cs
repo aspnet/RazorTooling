@@ -61,8 +61,9 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
             var dispatchArgs = new List<string>
             {
                 CommandName,
-                AssemblyNamesArgument.Value,
             };
+
+            dispatchArgs.AddRange(AssemblyNamesArgument.Values);
 
             if (ProtocolOption.HasValue())
             {

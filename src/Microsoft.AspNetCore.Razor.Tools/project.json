@@ -17,6 +17,18 @@
     ],
     "xmlDoc": true
   },
+  "configurations": {
+    "debug_x86": {
+      "buildOptions": {
+        "platform": "anycpu32bitpreferred"
+      }
+    },
+    "release_x86": {
+      "buildOptions": {
+        "platform": "anycpu32bitpreferred"
+      }
+    }
+  },
   "dependencies": {
     "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
@@ -43,6 +55,6 @@
         "dnxcore50"
       ]
     },
-    "net451": {}
+    "net451": { }
   }
 }

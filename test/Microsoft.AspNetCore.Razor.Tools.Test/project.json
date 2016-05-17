@@ -4,10 +4,10 @@
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.0-*",
+          "version": "1.0.0-rc2-3002702",
           "type": "platform"
         },
-        "Microsoft.AspNetCore.Razor.Tools": "1.0.0-*",
+        "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview1-final",
         "Microsoft.AspNetCore.Razor.Test.Sources": {
           "version": "1.0.0-*",
           "type": "build"
@@ -16,7 +16,7 @@
           "version": "1.0.0-*",
           "type": "build"
         },
-        "System.Diagnostics.Process": "4.1.0-*",
+        "System.Diagnostics.Process": "4.1.0-rc2-24027",
         "xunit": "2.1.0"
       },
       "imports": [

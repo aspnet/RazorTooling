@@ -3,9 +3,7 @@
 
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
-using Microsoft.AspNetCore.Razor.Tools;
 
 namespace Microsoft.AspNetCore.Razor.Tools.Internal
 {
@@ -32,10 +30,8 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 protocol = AssemblyTagHelperDescriptorResolver.DefaultProtocolVersion;
             }
 
-            var descriptorResolver = new AssemblyTagHelperDescriptorResolver()
-            {
-                ProtocolVersion = protocol
-            };
+            var descriptorResolver = CreateDescriptorResolver();
+            descriptorResolver.ProtocolVersion = protocol;
 
             var errorSink = new ErrorSink();
             var resolvedDescriptors = new List<TagHelperDescriptor>();
@@ -50,5 +46,8 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
 
             return 0;
         }
+
+        protected virtual AssemblyTagHelperDescriptorResolver CreateDescriptorResolver() =>
+            new AssemblyTagHelperDescriptorResolver();
     }
 }

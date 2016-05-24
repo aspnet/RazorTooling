@@ -4,10 +4,8 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
-using Microsoft.AspNetCore.Razor.Tools;
 
 namespace Microsoft.AspNetCore.Razor.Tools.Internal
 {
@@ -17,8 +15,13 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
         private readonly TagHelperTypeResolver _tagHelperTypeResolver;
 
         public AssemblyTagHelperDescriptorResolver()
+            : this(new TagHelperTypeResolver())
         {
-            _tagHelperTypeResolver = new TagHelperTypeResolver();
+        }
+
+        public AssemblyTagHelperDescriptorResolver(TagHelperTypeResolver tagHelperTypeResolver)
+        {
+            _tagHelperTypeResolver = tagHelperTypeResolver;
         }
 
         public static int DefaultProtocolVersion { get; } = 1;

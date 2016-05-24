@@ -5,8 +5,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Razor.Tools;
-using Microsoft.DotNet.Cli.Utils;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Internal;
@@ -57,6 +55,21 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 // Could not resolve framework for dispatch. Error was reported, exit early.
                 return 0;
             }
+
+#if NETCOREAPP1_0
+            int exitCode;
+            if (PackageOnlyResolveTagHelpersRunCommand.TryPackageOnlyTagHelperResolution(
+                    AssemblyNamesArgument,
+                    ProtocolOption,
+                    BuildBasePathOption,
+                    ConfigurationOption,
+                    projectFile,
+                    framework,
+                    out exitCode))
+            {
+                return exitCode;
+            }
+#endif
 
             var dispatchArgs = new List<string>
             {
@@ -125,7 +138,8 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
             }
             else
             {
-                framework = availableFrameworks.First();
+                // Prioritize non-desktop frameworks since they have the option of not dispatching to resolve TagHelpers.
+                framework = availableFrameworks.FirstOrDefault(f => !f.IsDesktop()) ?? availableFrameworks.First();
             }
 
             resolvedFramework = framework;

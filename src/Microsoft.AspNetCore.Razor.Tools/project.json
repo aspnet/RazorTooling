@@ -1,11 +1,18 @@
 {
   "version": "1.0.0-*",
-  "description": "TagHelper tooling for .NET Core CLI.",
+  "description": "TagHelper tooling for .NET Core CLI. Contains the dotnet-razor-tooling command used to resolve TagHelperDescriptors for projects at design-time.",
   "packOptions": {
     "repository": {
       "type": "git",
       "url": "git://github.com/AspNet/RazorTooling"
-    }
+    },
+    "tags": [
+      "cshtml",
+      "razor",
+      "taghelper",
+      "aspnetcore",
+      "taghelpers"
+    ]
   },
   "buildOptions": {
     "outputName": "dotnet-razor-tooling",

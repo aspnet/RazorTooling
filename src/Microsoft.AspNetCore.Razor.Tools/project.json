@@ -57,11 +57,7 @@
         },
         "System.Diagnostics.Process": "4.1.0-*",
         "System.Runtime.Serialization.Primitives": "4.1.1-*"
-      },
-      "imports": [
-        "portable-net451+win8",
-        "dnxcore50"
-      ]
+      }
     },
     "net451": { }
   }

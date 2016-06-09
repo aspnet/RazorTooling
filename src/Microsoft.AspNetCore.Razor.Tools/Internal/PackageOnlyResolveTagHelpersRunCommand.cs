@@ -81,7 +81,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
 
             var loadContext = projectContext.CreateLoadContext(
                 projectContext.RuntimeIdentifier,
-                configuration: "Debug",
+                configuration,
                 outputPath: null);
             var runner = new PackageOnlyResolveTagHelpersRunCommand(loadContext)
             {

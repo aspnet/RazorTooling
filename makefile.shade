@@ -60,7 +60,11 @@ k-standard-goals
         var x64ExeDestinationPath = Path.Combine(win7x64Directory, TOOL_EXE_NAME);
         File.Copy(x64ExePath, x64ExeDestinationPath);
         
-        var nugetExePath = Path.Combine(BASE_DIR_LOCAL, ".build", "nuget.exe");
+        var nugetExePath = Environment.GetEnvironmentVariable("KOREBUILD_NUGET_EXE");
+        if (string.IsNullOrEmpty(nugetExePath))
+        {
+            nugetExePath = Path.Combine(BASE_DIR_LOCAL, ".build", "nuget.exe");
+        }
         var nuspecPath = Path.Combine(extractToDirectory, TOOL_PROJECT_NAME + ".nuspec");
         ExecClr(nugetExePath, "pack " + nuspecPath + " -OutputDirectory " + BUILD_DIR_LOCAL);
         

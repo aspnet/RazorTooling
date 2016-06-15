@@ -45,7 +45,7 @@
       "version": "1.0.0-*"
     },
     "Microsoft.Extensions.PlatformAbstractions": "1.0.0-*",
-    "Newtonsoft.Json": "9.0.1-beta1"
+    "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
     "netcoreapp1.0": {

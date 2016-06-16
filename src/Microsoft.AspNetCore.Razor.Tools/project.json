@@ -37,14 +37,14 @@
     }
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Razor.Runtime": "1.0.0-*",
+    "Microsoft.AspNetCore.Razor.Runtime": "1.1.0-*",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
-    "Microsoft.Extensions.CommandLineUtils": "1.0.0-*",
+    "Microsoft.Extensions.CommandLineUtils": "1.1.0-*",
     "Microsoft.Extensions.DotnetToolDispatcher.Sources": {
       "type": "build",
-      "version": "1.0.0-*"
+      "version": "1.1.0-*"
     },
-    "Microsoft.Extensions.PlatformAbstractions": "1.0.0-*",
+    "Microsoft.Extensions.PlatformAbstractions": "1.1.0-*",
     "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
@@ -59,6 +59,6 @@
         "System.Runtime.Serialization.Primitives": "4.1.1-*"
       }
     },
-    "net451": { }
+    "net451": {}
   }
 }

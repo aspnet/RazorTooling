@@ -4,8 +4,9 @@
 using System.Collections.Generic;
 using System.Globalization;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
+using Microsoft.AspNetCore.Razor.Design.Internal;
 
-namespace Microsoft.AspNetCore.Razor.Tools.Internal
+namespace Microsoft.AspNetCore.Razor.Design
 {
     public class ResolveTagHelpersRunCommand : ResolveTagHelpersCommandBase
     {
@@ -20,7 +21,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                     ReportError(
                         string.Format(
                             CultureInfo.CurrentCulture,
-                            Resources.CouldNotParseProvidedProtocol,
+                            DesignResources.CouldNotParseProvidedProtocol,
                             protocolOptionValue));
                     return 0;
                 }

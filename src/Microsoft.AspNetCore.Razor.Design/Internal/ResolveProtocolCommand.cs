@@ -3,15 +3,13 @@
 
 using System;
 using System.Globalization;
-using Microsoft.AspNetCore.Razor.Tools;
-using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace Microsoft.AspNetCore.Razor.Tools.Internal
+namespace Microsoft.AspNetCore.Razor.Design.Internal
 {
     public static class ResolveProtocolCommand
     {
-        internal static void Register(CommandLineApplication app)
+        public static void Register(CommandLineApplication app)
         {
             app.Command("resolve-protocol", config =>
             {
@@ -28,17 +26,17 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                     int clientProtocol;
                     if (!int.TryParse(clientProtocolString, out clientProtocol))
                     {
-                        Reporter.Error.WriteLine(
+                        Console.Error.WriteLine(
                             string.Format(
                                 CultureInfo.CurrentCulture,
-                                Resources.CouldNotParseProvidedProtocol,
+                                DesignResources.CouldNotParseProvidedProtocol,
                                 clientProtocolString));
                         return 1;
                     }
 
                     var resolvedProtocol = ResolveProtocol(clientProtocol, pluginProtocol);
 
-                    Reporter.Output.WriteLine(resolvedProtocol.ToString(CultureInfo.InvariantCulture));
+                    Console.WriteLine(resolvedProtocol.ToString(CultureInfo.InvariantCulture));
 
                     return 0;
                 });

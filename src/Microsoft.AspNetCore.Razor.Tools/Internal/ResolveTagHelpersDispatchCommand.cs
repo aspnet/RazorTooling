@@ -5,6 +5,8 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Reflection;
+using Microsoft.AspNetCore.Razor.Design;
 using Microsoft.DotNet.ProjectModel;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Internal;
@@ -84,13 +86,15 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 dispatchArgs.Add(ProtocolOption.Value());
             }
 
+            var toolName = typeof(Design.Program).GetTypeInfo().Assembly.GetName().Name;
             var dispatchCommand = DotnetToolDispatcher.CreateDispatchCommand(
                 dispatchArgs,
                 framework,
                 ConfigurationOption.Value(),
                 outputPath: null,
                 buildBasePath: BuildBasePathOption.Value(),
-                projectDirectory: projectFile.ProjectDirectory);
+                projectDirectory: projectFile.ProjectDirectory,
+                toolName: toolName);
 
             using (var errorWriter = new StringWriter())
             {
@@ -105,7 +109,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                     ReportError(
                         string.Format(
                             CultureInfo.CurrentCulture,
-                            Resources.FailedToExecuteRazorTooling,
+                            ToolResources.FailedToExecuteRazorTooling,
                             errorWriter.ToString()));
                 }
 
@@ -128,7 +132,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                     ReportError(
                         string.Format(
                             CultureInfo.CurrentCulture,
-                            Resources.ProjectDoesNotSupportProvidedFramework,
+                            ToolResources.ProjectDoesNotSupportProvidedFramework,
                             ProjectArgument.Value,
                             frameworkOptionValue));
 

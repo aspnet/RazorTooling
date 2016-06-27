@@ -7,7 +7,7 @@ using System.Globalization;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 
-namespace Microsoft.AspNetCore.Razor.Tools.Internal
+namespace Microsoft.AspNetCore.Razor.Design.Internal
 {
     public class AssemblyTagHelperDescriptorResolver
     {
@@ -53,7 +53,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 throw new InvalidOperationException(
                     string.Format(
                         CultureInfo.CurrentCulture,
-                        Resources.InvalidProtocolValue,
+                        DesignResources.InvalidProtocolValue,
                         typeof(TagHelperDescriptor).FullName, ProtocolVersion));
             }
         }

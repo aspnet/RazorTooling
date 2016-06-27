@@ -4,17 +4,14 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.Loader;
-using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Razor.Test.Internal;
-using Microsoft.AspNetCore.Razor.Tools.Internal;
 using Xunit;
 
-namespace Microsoft.AspNetCore.Tooling.Razor
+namespace Microsoft.AspNetCore.Razor.Design.Internal
 {
-    public class RazorPluginTest
+    public class AssemblyTagHelperDescriptorResolverTest
     {
         private const string DefaultPrefix = "";
 

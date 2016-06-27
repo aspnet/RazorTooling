@@ -3,13 +3,11 @@
 
 using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Razor;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
-using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
-namespace Microsoft.AspNetCore.Razor.Tools.Internal
+namespace Microsoft.AspNetCore.Razor.Design
 {
     public abstract class ResolveTagHelpersCommandBase
     {
@@ -42,7 +40,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
 
             var serializedResult = JsonConvert.SerializeObject(resolvedResult, Formatting.Indented);
 
-            Reporter.Output.WriteLine(serializedResult);
+            Console.WriteLine(serializedResult);
         }
 
         protected void ReportError(string message)

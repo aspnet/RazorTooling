@@ -18,6 +18,14 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Razor.
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Razor.Design.Test", "test\Microsoft.AspNetCore.Razor.Design.Test\Microsoft.AspNetCore.Razor.Design.Test.xproj", "{C4279BCD-DADD-4354-B28D-B7FE24BAD230}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNetCore.Razor.Tools.Test", "test\Microsoft.AspNetCore.Razor.Tools.Test\Microsoft.AspNetCore.Razor.Tools.Test.xproj", "{D0754BC0-B357-4ABD-8964-00F61BE15CDD}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "testapps", "testapps", "{55C25CA3-70A9-41BC-A0D5-7B44D06CC6CD}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RazorToolingTestApp.Library", "testapps\RazorToolingTestApp.Library\RazorToolingTestApp.Library.xproj", "{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "RazorToolingTestApp.LibraryPackage", "src\RazorToolingTestApp.LibraryPackage\RazorToolingTestApp.LibraryPackage.xproj", "{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		debug_x86|Any CPU = debug_x86|Any CPU
@@ -50,6 +58,30 @@ Global
 		{C4279BCD-DADD-4354-B28D-B7FE24BAD230}.release_x86|Any CPU.Build.0 = Release|Any CPU
 		{C4279BCD-DADD-4354-B28D-B7FE24BAD230}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C4279BCD-DADD-4354-B28D-B7FE24BAD230}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.debug_x86|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.debug_x86|Any CPU.Build.0 = Debug|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.release_x86|Any CPU.ActiveCfg = Release|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.release_x86|Any CPU.Build.0 = Release|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.debug_x86|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.debug_x86|Any CPU.Build.0 = Debug|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.release_x86|Any CPU.ActiveCfg = Release|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.release_x86|Any CPU.Build.0 = Release|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.debug_x86|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.debug_x86|Any CPU.Build.0 = Debug|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.release_x86|Any CPU.ActiveCfg = Release|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.release_x86|Any CPU.Build.0 = Release|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -58,5 +90,8 @@ Global
 		{6F1CAB8C-2315-46BB-B9B4-00564743590C} = {253024B2-368B-4B24-9CD3-D48E9C1EC948}
 		{60043E40-0D14-4E41-A97A-52A7A1BB5A26} = {253024B2-368B-4B24-9CD3-D48E9C1EC948}
 		{C4279BCD-DADD-4354-B28D-B7FE24BAD230} = {8D49C692-BA71-43C4-927F-E9E2BA8FC795}
+		{D0754BC0-B357-4ABD-8964-00F61BE15CDD} = {8D49C692-BA71-43C4-927F-E9E2BA8FC795}
+		{CF8D2020-2F4C-4C9F-9B5E-76A0A3E33731} = {55C25CA3-70A9-41BC-A0D5-7B44D06CC6CD}
+		{DAE3EE34-5C21-4A05-8C0F-2DD1C18BB25B} = {253024B2-368B-4B24-9CD3-D48E9C1EC948}
 	EndGlobalSection
 EndGlobal

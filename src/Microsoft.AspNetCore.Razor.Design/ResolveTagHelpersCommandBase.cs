@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
+using Microsoft.AspNetCore.Razor.Design.Internal;
 using Microsoft.Extensions.CommandLineUtils;
 using Newtonsoft.Json;
 
@@ -69,13 +70,6 @@ namespace Microsoft.AspNetCore.Razor.Design
 
                 config.OnExecute((Func<int>)OnExecute);
             });
-        }
-
-        private class ResolvedTagHelperDescriptorsResult
-        {
-            public IEnumerable<TagHelperDescriptor> Descriptors { get; set; }
-
-            public IEnumerable<RazorError> Errors { get; set; }
         }
     }
 }

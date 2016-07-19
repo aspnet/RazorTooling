@@ -2,11 +2,13 @@ use namespace="System.IO"
 use namespace="System.IO.Compression"
 use namespace="System.Linq"
 
-default CONFIGURATION_LOCAL='${E("Configuration")}'
 default BASE_DIR_LOCAL='${Directory.GetCurrentDirectory()}'
 default BUILD_DIR_LOCAL='${Path.Combine(BASE_DIR_LOCAL, "artifacts", "build")}'
 default TOOL_PROJECT_NAME='Microsoft.AspNetCore.Razor.Design'
 default TOOL_EXE_NAME='Microsoft.AspNetCore.Razor.Design.exe'
+default TEST_PROJECT_PACKAGE_NAME='RazorToolingTestApp.LibraryPackage'
+default TEST_ARTIFACTS_DIR='${Path.Combine(BASE_DIR_LOCAL, "testartifacts")}'
+default TEST_ARTIFACTS_INITIAL_PACKAGE_DIR='${Path.Combine(TEST_ARTIFACTS_DIR, "initialpackages")}'
 var VERSION='0.1'
 var FULL_VERSION='0.1'
 var AUTHORS='Microsoft Open Technologies, Inc.'
@@ -15,13 +17,25 @@ var AUTHORS='Microsoft Open Technologies, Inc.'
 use-standard-lifecycle
 k-standard-goals
 
+default CONFIGURATION_LOCAL='${E("Configuration")}'
+
+#pack-test-dependencies target='repo-initialize'
+    rimraf rimrafDir='${TEST_ARTIFACTS_INITIAL_PACKAGE_DIR}' if='Directory.Exists(TEST_ARTIFACTS_INITIAL_PACKAGE_DIR)'
+
+    @{
+        Directory.CreateDirectory(TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
+        var projectDirectory = Path.Combine(BASE_DIR_LOCAL, "src", TEST_PROJECT_PACKAGE_NAME);
+        
+        Dotnet("restore " + projectDirectory);
+        Dotnet("pack " + projectDirectory + " -o " + TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
+
+        // Restore testapps folder locally to ensure all dynamically generated packages have been cached. 
+        var testProjectDirectory = Path.Combine(BASE_DIR_LOCAL, "testapps");
+        Dotnet("restore " + testProjectDirectory + " -f " + TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
+    }
+
 #repack-x86 target='compile' if='Directory.Exists("src")'
     @{
-        if (string.IsNullOrEmpty(CONFIGURATION_LOCAL))
-        {
-            CONFIGURATION_LOCAL = "Debug";
-        }
-        
         // Forcing to lower to match the entry in the sources project.json.
         var configurationX86 = CONFIGURATION_LOCAL.ToLower() + "_x86";
         
@@ -78,3 +92,7 @@ k-standard-goals
             // Don't care if we couldn't delete the temp directory.
         }
     }
+
+
+macro name="DotnetRestore" restoreDir='string'
+    dotnet-restore

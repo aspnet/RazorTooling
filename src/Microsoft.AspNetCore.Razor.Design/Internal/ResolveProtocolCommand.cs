@@ -13,7 +13,7 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
         {
             app.Command("resolve-protocol", config =>
             {
-                config.Description = "Resolves protocol used to resolve TagHeleprDescriptors.";
+                config.Description = "Resolves protocol used to resolve TagHelperDescriptors.";
                 config.HelpOption("-?|-h|--help");
                 var clientProtocolArgument = config.Argument(
                     "[clientProtocol]",

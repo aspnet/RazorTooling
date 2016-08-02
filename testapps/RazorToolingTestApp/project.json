@@ -1,24 +1,18 @@
 ﻿{
   "dependencies": {
-    "Microsoft.AspNetCore.Diagnostics": "1.1.0-*",
-    "Microsoft.AspNetCore.Mvc": "1.1.0-*",
     "Microsoft.AspNetCore.Razor.Design": {
       "type": "build",
       "version": "1.0.0-*",
       "target": "package"
     },
-    "Microsoft.AspNetCore.Server.IISIntegration": "1.1.0-*",
-    "Microsoft.AspNetCore.Server.Kestrel": "1.1.0-*",
-    "Microsoft.Extensions.Logging.Console": "1.1.0-*",
     "RazorToolingTestApp.Library": "1.0.0",
     "RazorToolingTestApp.LibraryPackage": {
       "version": "1.0.0",
-      "target": "package" /* Remove this line and the above comma to have this project restore outside of tests */
+      "target": "package"
     }
   },
 
   "tools": {
-    "Microsoft.AspNetCore.Server.IISIntegration.Tools": "1.0.0-*",
     "Microsoft.AspNetCore.Razor.Tools": "1.0.0-*"
   },
 

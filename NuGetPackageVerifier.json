@@ -4,7 +4,16 @@
             "AdxVerificationCompositeRule"
         ],
         "packages": {
-            "Microsoft.AspNetCore.Razor.Tools": { }
+            "Microsoft.AspNetCore.Razor.Tools": { },
+            "Microsoft.AspNetCore.Razor.Design": { }
+        }
+    },
+    "adx-nonshipping": { // Packages written by the ADX team but that don't ship on NuGet.org (thus, no need to scan anything in them)
+        "rules": [
+            // Don't run any rules for packages the ADX team creates but doesn't ship.
+        ],
+        "packages": {
+            "RazorToolingTestApp.LibraryPackage": { }
         }
     },
     "Default": { // Rules to run for packages not listed in any other set.

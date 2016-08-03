@@ -24,10 +24,14 @@ default CONFIGURATION_LOCAL='${E("Configuration")}'
 
     @{
         Directory.CreateDirectory(TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
-        var projectDirectory = Path.Combine(BASE_DIR_LOCAL, "src", TEST_PROJECT_PACKAGE_NAME);
+        var srcDirectory = Path.Combine(BASE_DIR_LOCAL, "src");
         
-        Dotnet("restore " + projectDirectory);
-        Dotnet("pack " + projectDirectory + " -o " + TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
+        Dotnet("restore " + srcDirectory);
+
+        foreach (var directory in Directory.EnumerateDirectories(srcDirectory))
+        {
+            Dotnet("pack " + directory + " -o " + TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
+        }
 
         // Restore testapps folder locally to ensure all dynamically generated packages have been cached. 
         var testProjectDirectory = Path.Combine(BASE_DIR_LOCAL, "testapps");

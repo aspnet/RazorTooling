@@ -19,7 +19,8 @@ k-standard-goals
 
 default CONFIGURATION_LOCAL='${E("Configuration")}'
 
-#pack-test-dependencies target='repo-initialize'
+#repo-initialize target='initialize'
+    use-volatile-feed
     rimraf rimrafDir='${TEST_ARTIFACTS_INITIAL_PACKAGE_DIR}' if='Directory.Exists(TEST_ARTIFACTS_INITIAL_PACKAGE_DIR)'
 
     @{
@@ -35,7 +36,7 @@ default CONFIGURATION_LOCAL='${E("Configuration")}'
 
         // Restore testapps folder locally to ensure all dynamically generated packages have been cached. 
         var testProjectDirectory = Path.Combine(BASE_DIR_LOCAL, "testapps");
-        Dotnet("restore " + testProjectDirectory + " -f " + TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
+        Dotnet("restore " + BASE_DIR_LOCAL + " -f " + TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
     }
 
 #repack-x86 target='compile' if='Directory.Exists("src")'

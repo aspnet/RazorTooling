@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
+using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.AspNetCore.Razor.Test.Internal;
 using Xunit;
@@ -52,11 +53,11 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
         public void Resolve_ResolvesTagHelperDescriptors()
         {
             // Arrange
-            var assemblyNameLookups = new Dictionary<string, IEnumerable<Type>>
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<TypeInfo>>
             {
-                { CustomTagHelperAssembly, new[] { typeof(CustomTagHelper) } }
+                { CustomTagHelperAssembly, new[] { typeof(CustomTagHelper).GetTypeInfo() } }
             };
-            var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
+            var descriptorResolver = new AssemblyTagHelperDescriptorResolver(new TestTagHelperTypeResolver(assemblyNameLookups));
             var errorSink = new ErrorSink();
 
             // Act
@@ -74,11 +75,11 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
         public void Resolve_ResolvesDesignTimeTagHelperDescriptors()
         {
             // Arrange
-            var assemblyNameLookups = new Dictionary<string, IEnumerable<Type>>
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<TypeInfo>>
             {
-                { CustomTagHelperAssembly, new[] { typeof(DesignTimeTagHelper) } }
+                { CustomTagHelperAssembly, new[] { typeof(DesignTimeTagHelper).GetTypeInfo() } }
             };
-            var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
+            var descriptorResolver = new AssemblyTagHelperDescriptorResolver(new TestTagHelperTypeResolver(assemblyNameLookups));
             var expectedDescriptor = new TagHelperDescriptor
             {
                 Prefix = DefaultPrefix,
@@ -109,11 +110,12 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
         public void Resolve_CreatesErrors()
         {
             // Arrange
-            var assemblyNameLookups = new Dictionary<string, IEnumerable<Type>>
+            var assemblyNameLookups = new Dictionary<string, IEnumerable<TypeInfo>>
             {
-                { CustomTagHelperAssembly, new[] { typeof(InvalidTagHelper) } }
+                { CustomTagHelperAssembly, new[] { typeof(InvalidTagHelper).GetTypeInfo() } }
             };
-            var descriptorResolver = new TestAssemblyTagHelperDescriptorResolver(assemblyNameLookups);
+
+            var descriptorResolver = new AssemblyTagHelperDescriptorResolver(new TestTagHelperTypeResolver(assemblyNameLookups));
             var errorSink = new ErrorSink();
 
             // Act
@@ -130,35 +132,35 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
             Assert.Equal(0, error.Length);
         }
 
-        private class TestAssemblyTagHelperDescriptorResolver : AssemblyTagHelperDescriptorResolver
+        private class TestTagHelperTypeResolver : TagHelperTypeResolver
         {
-            private readonly IDictionary<string, IEnumerable<Type>> _assemblyTypeLookups;
+            private readonly IDictionary<string, IEnumerable<TypeInfo>> _assemblyTypeLookups;
 
-            public TestAssemblyTagHelperDescriptorResolver(IDictionary<string, IEnumerable<Type>> assemblyTypeLookups)
+            public TestTagHelperTypeResolver(IDictionary<string, IEnumerable<TypeInfo>> assemblyTypeLookups)
             {
                 _assemblyTypeLookups = assemblyTypeLookups;
             }
 
-            protected override IEnumerable<Type> GetTagHelperTypes(string assemblyName, ErrorSink errorSink)
+            protected override IEnumerable<TypeInfo> GetExportedTypes(AssemblyName assemblyName)
             {
-                return _assemblyTypeLookups[assemblyName];
+                return _assemblyTypeLookups[assemblyName.Name];
             }
         }
+    }
 
-        private class CustomTagHelper : TagHelper
-        {
-        }
+    public class CustomTagHelper : TagHelper
+    {
+    }
 
-        [RestrictChildren("br")]
-        [OutputElementHint("strong")]
-        [HtmlTargetElement("design-time", TagStructure = TagStructure.NormalOrSelfClosing)]
-        private class DesignTimeTagHelper : TagHelper
-        {
-        }
+    [RestrictChildren("br")]
+    [OutputElementHint("strong")]
+    [HtmlTargetElement("design-time", TagStructure = TagStructure.NormalOrSelfClosing)]
+    public class DesignTimeTagHelper : TagHelper
+    {
+    }
 
-        [HtmlTargetElement("inv@lid")]
-        private class InvalidTagHelper : TagHelper
-        {
-        }
+    [HtmlTargetElement("inv@lid")]
+    public class InvalidTagHelper : TagHelper
+    {
     }
 }

@@ -38,6 +38,7 @@
   "dependencies": {
     "Microsoft.AspNetCore.Razor.Runtime": "1.1.0-*",
     "Microsoft.Extensions.CommandLineUtils": "1.1.0-*",
+    "Microsoft.Extensions.DependencyInjection": "1.1.0-*",
     "Newtonsoft.Json": "9.0.1"
   },
   "frameworks": {
@@ -49,6 +50,10 @@
         }
       }
     },
-    "net451": {}
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Runtime": ""
+      }
+    }
   }
 }

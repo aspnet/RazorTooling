@@ -6,8 +6,10 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
+using Microsoft.AspNetCore.Razor.TagHelpers;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.AspNetCore.Razor.Design.Internal
@@ -17,6 +19,7 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
         private const string TypeFullName = "Microsoft.AspNetCore.Mvc.DesignTimeMvcServiceCollectionProvider";
         private const string MvcAssemblyName = "Microsoft.AspNetCore.Mvc";
         private const string MethodName = "PopulateServiceCollection";
+        private const string ViewComponentNameKey = "ViewComponentName";
 
         private readonly TagHelperDescriptorFactory _tagHelperDescriptorFactory;
         private readonly TagHelperTypeResolver _tagHelperTypeResolver;
@@ -87,7 +90,14 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
             var context = new TagHelperDescriptorResolutionContext(directiveDescriptors, errorSink);
             var descriptors = resolver.Resolve(context);
 
-            return descriptors;
+            // Temporary workaround to make design time for ViewComponent tag helpers work without needing a VS update.
+            // This will be removed in a future version.
+            var vcthDescriptors = descriptors.Where(d => d.PropertyBag.ContainsKey(ViewComponentNameKey));
+            var fakeVcthDescriptors = GetFakeDescriptors(vcthDescriptors);
+
+            var finalDescriptors = descriptors.Except(vcthDescriptors).Union(fakeVcthDescriptors);
+
+            return finalDescriptors;
         }
 
         private void EnsureMvcInitialized()
@@ -118,5 +128,108 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
             _populateMethodDelegate = (Action<IServiceCollection, string>) populateMethod
                 ?.CreateDelegate(typeof(Action<IServiceCollection, string>));
         }
+
+        private IEnumerable<TagHelperDescriptor> GetFakeDescriptors(IEnumerable<TagHelperDescriptor> vcthDescriptors)
+        {
+            /*
+             * Since there are no corresponding tag helper types represented by vcthDescriptors,
+             * We create fake descriptors with the same attributes and their types using the types 
+             * ViewComponentTagHelperDesignTimeType and ViewComponentTagHelperDesignTimeHelperType which mimic the
+             * same design time experience as the original tag helper descriptors.
+             */ 
+            var fakeDescriptors = new List<TagHelperDescriptor>();
+            foreach (var descriptor in vcthDescriptors)
+            {
+                var fakeType = typeof(ViewComponentTagHelperDesignTimeType).FullName;
+                var fakeDescriptor = new TagHelperDescriptor(descriptor);
+                fakeDescriptor.TypeName = fakeType;
+
+                var fakeAttributes = new List<TagHelperAttributeDescriptor>();
+                fakeDescriptor.Attributes = fakeAttributes;
+
+                var fakeHelperType = typeof(ViewComponentTagHelperDesignTimeHelperType).FullName;
+                var fakeHelperDescriptor = new TagHelperDescriptor(descriptor);
+                fakeHelperDescriptor.TypeName = fakeHelperType;
+
+                var fakeHelperAttributes = new List<TagHelperAttributeDescriptor>();
+                fakeHelperDescriptor.Attributes = fakeHelperAttributes;
+
+                foreach (var attribute in descriptor.Attributes)
+                {
+                    /*
+                     * We use TagHelperAttributeDescriptor.PropertyName to inject code into the generated code for the cshtml.
+                     * For example consider FooProperty of type string in ExampleTagHelper and ExampleTagHelper2,
+                     * 
+                     * __SomeNamespace_ExampleTagHelper.FooProperty = "bar";
+                     * __SomeNamespace_ExampleTagHelper2.FooProperty = __SomeNamespace_ExampleTagHelper.FooProperty;
+                     * 
+                     * "FooProperty" in the above code will be replaced with the specified value as below,
+                     * 
+                     * __Microsoft_AspNetCore_Razor_Design_Internal_ViewComponentTagHelperDesignTimeType.PlaceholderProperty = null;
+                     * Microsoft.AspNetCore.Razor.Design.Internal.ViewComponentTagHelperDesignTimeType.ActionProperty = () => {
+                     *     System.String __obj = default(System.String);
+                     *     Microsoft.AspNetCore.Razor.Design.Internal.ViewComponentTagHelperDesignTimeType.PlaceholderMethod(__obj); ## This handles "__obj is assigned but never used" warning. 
+                     *     __obj = "bar";
+                     *     __Microsoft_AspNetCore_Razor_Design_Internal_ViewComponentTagHelperDesignTimeHelperType.PlaceholderProperty = null;
+                     * };// ## The comment(//) here is needed to ignore the code that replaces "ExampleTagHelper.FooProperty".
+                     */
+                    const string fakeVariableName = "__obj";
+                    var summary = $"{attribute.TypeName}: {descriptor.TypeName}.{attribute.PropertyName}";
+                    var fakeAttributePropertyName = $"{nameof(ViewComponentTagHelperDesignTimeType.PlaceholderProperty)} = null; " +
+                            $"{fakeType}.{nameof(ViewComponentTagHelperDesignTimeType.ActionProperty)} = () => {{ " +
+                            $"{attribute.TypeName} {fakeVariableName} = default({attribute.TypeName}); " +
+                            $"{fakeType}.{nameof(ViewComponentTagHelperDesignTimeType.PlaceholderMethod)}({fakeVariableName}); {fakeVariableName} ";
+
+                    var fakeAttribute = new TagHelperAttributeDescriptor()
+                    {
+                        IsIndexer = attribute.IsIndexer,
+                        IsEnum = attribute.IsEnum,
+                        IsStringProperty = attribute.IsStringProperty,
+                        Name = attribute.Name,
+                        PropertyName = fakeAttributePropertyName,
+                        TypeName = attribute.TypeName,
+                        DesignTimeDescriptor = new TagHelperAttributeDesignTimeDescriptor
+                        {
+                            Summary = attribute.DesignTimeDescriptor?.Summary ?? summary
+                        },
+                    };
+                    fakeAttributes.Add(fakeAttribute);
+
+                    var fakeHelperAttributePropertyName =
+                        $"{nameof(ViewComponentTagHelperDesignTimeType.PlaceholderProperty)} = null; }};//";
+
+                    var fakeHelperAttribute = new TagHelperAttributeDescriptor()
+                    {
+                        IsIndexer = attribute.IsIndexer,
+                        IsEnum = attribute.IsEnum,
+                        IsStringProperty = attribute.IsStringProperty,
+                        Name = attribute.Name,
+                        PropertyName = fakeHelperAttributePropertyName,
+                        TypeName = attribute.TypeName,
+                    };
+                    fakeHelperAttributes.Add(fakeHelperAttribute);
+                }
+
+                fakeDescriptors.Add(fakeDescriptor);
+                fakeDescriptors.Add(fakeHelperDescriptor);
+            }
+
+            return fakeDescriptors;
+        }
+    }
+
+    public abstract class ViewComponentTagHelperDesignTimeType : TagHelper
+    {
+        public object PlaceholderProperty { get; set; }
+
+        public static Action ActionProperty { get; set; }
+
+        public static void PlaceholderMethod(object obj)
+        {
+        }
+    }
+
+    public abstract class ViewComponentTagHelperDesignTimeHelperType : ViewComponentTagHelperDesignTimeType
+    {
     }
 }

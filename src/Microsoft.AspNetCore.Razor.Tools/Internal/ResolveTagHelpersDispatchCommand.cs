@@ -1,6 +1,7 @@
 // Copyright (c) .NET Foundation. All rights reserved.
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
@@ -86,6 +87,14 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 dispatchArgs.Add(ProtocolOption.Value());
             }
 
+#if DEBUG
+            var commandLineArgs = Environment.GetCommandLineArgs();
+            if (commandLineArgs.Length > 1 && commandLineArgs[1] == "--debug")
+            {
+                dispatchArgs.Insert(0, commandLineArgs[1]);
+            }
+#endif
+
             var toolName = typeof(Design.Program).GetTypeInfo().Assembly.GetName().Name;
             var dispatchCommand = DotnetToolDispatcher.CreateDispatchCommand(
                 dispatchArgs,
@@ -99,7 +108,11 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
             using (var errorWriter = new StringWriter())
             {
                 var commandExitCode = dispatchCommand
+#if DEBUG
+                    .ForwardStdErr(Console.Error)
+#else
                     .ForwardStdErr(errorWriter)
+#endif
                     .ForwardStdOut()
                     .Execute()
                     .ExitCode;

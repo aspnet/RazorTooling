@@ -5,6 +5,7 @@ using System;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+using Microsoft.AspNetCore.Razor.Design.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Design
 {
@@ -14,6 +15,9 @@ namespace Microsoft.AspNetCore.Razor.Design
 
         public static int Main(string[] args)
         {
+#if DEBUG
+            DebugHelper.HandleDebugSwitch(ref args);
+#endif
             var app = new RazorToolingApplication(ProgramType);
 
             EnsureValidDispatchRecipient(ref args);

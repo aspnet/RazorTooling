@@ -2,6 +2,7 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Razor.Design;
+using Microsoft.AspNetCore.Razor.Design.Internal;
 using Microsoft.AspNetCore.Razor.Tools.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Tools
@@ -10,6 +11,9 @@ namespace Microsoft.AspNetCore.Razor.Tools
     {
         public static int Main(string[] args)
         {
+#if DEBUG
+            DebugHelper.HandleDebugSwitch(ref args);
+#endif
             var app = new RazorToolingApplication(typeof(Program));
 
             ResolveTagHelpersCommandBase.Register<ResolveTagHelpersDispatchCommand>(app);

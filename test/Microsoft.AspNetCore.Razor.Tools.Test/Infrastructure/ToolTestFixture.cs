@@ -47,7 +47,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Test.Infrastructure
             var outputWriter = new StringWriter();
 
             var exitCode = command
-                .ForwardStdErr(outputWriter)
+                .ForwardStdErr(Console.Error)
                 .ForwardStdOut(outputWriter)
                 .WorkingDirectory(projectDirectory)
                 .Execute()

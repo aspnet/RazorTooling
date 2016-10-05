@@ -81,10 +81,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 }
             }
 
-            var loadContext = projectContext.CreateLoadContext(
-                projectContext.RuntimeIdentifier,
-                configuration,
-                outputPath: null);
+            var loadContext = new RazorProjectLoadContext(projectContext, configuration);
             var runner = new PackageOnlyResolveTagHelpersRunCommand(loadContext)
             {
                 AssemblyNamesArgument = assemblyNamesArgument,

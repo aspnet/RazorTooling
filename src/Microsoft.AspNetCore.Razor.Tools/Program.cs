@@ -2,7 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using Microsoft.AspNetCore.Razor.Design;
+#if DEBUG
 using Microsoft.AspNetCore.Razor.Design.Internal;
+#endif
 using Microsoft.AspNetCore.Razor.Tools.Internal;
 
 namespace Microsoft.AspNetCore.Razor.Tools

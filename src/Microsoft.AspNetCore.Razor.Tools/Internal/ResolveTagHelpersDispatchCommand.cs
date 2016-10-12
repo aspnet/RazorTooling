@@ -59,7 +59,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 return 0;
             }
 
-#if NETCOREAPP1_1
+#if NETCOREAPP1_0
             int exitCode;
             if (PackageOnlyResolveTagHelpersRunCommand.TryPackageOnlyTagHelperResolution(
                     AssemblyNamesArgument,

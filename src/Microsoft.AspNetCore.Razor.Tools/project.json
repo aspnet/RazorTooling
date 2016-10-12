@@ -33,7 +33,7 @@
     }
   },
   "frameworks": {
-    "netcoreapp1.1": {
+    "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.DotNet.ProjectModel.Loader": "1.0.0-*",
         "Microsoft.NETCore.App": {

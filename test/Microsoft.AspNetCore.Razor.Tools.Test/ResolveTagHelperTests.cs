@@ -32,7 +32,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Test
 
         public string TestProjectDirectory => Path.Combine(Fixture.TestAppDirectory, TestProjectName);
 
-        public string TestProjectFile => Path.Combine(TestProjectDirectory, "project.json");
+        public string TestProjectFile => Path.Combine(TestProjectDirectory, $"{TestProjectName}.csproj");
 
         [Fact]
         public void ResolveTagHelpersGeneratesExpectedOutput_WithDefaultParameters()
@@ -68,53 +68,10 @@ namespace Microsoft.AspNetCore.Razor.Tools.Test
         }
 
         [Fact]
-        public void ResolveTagHelpersGeneratesExpectedOutput_WithBuildBasePath()
+        public void ResolveTagHelpersGeneratesExpectedOutput_ForPackageAssemblies()
         {
             // Arrange
-            var testBin = Path.Combine(Fixture.TestArtifactsDirectory, "testbin");
-
-            // Act & Assert
-            ResolveTagHelpersGeneratesExpectedOutput("-b", testBin);
-        }
-
-        [Fact]
-        public void ResolveTagHelpersDoesNotDispatchForPackageAssemblies()
-        {
-            // Arrange
-            var tagHelperAssemblyName = typeof(MultiEnumTagHelper).GetTypeInfo().Assembly.GetName().Name;
-            var tagHelperDescriptorFactory = new TagHelperDescriptorFactory(designTime: true);
-            var tagHelperTypeResolver = new TagHelperTypeResolver();
-            var errorSink = new ErrorSink();
-            var tagHelperTypes = tagHelperTypeResolver.Resolve(tagHelperAssemblyName, SourceLocation.Zero, errorSink);
-            var expectedDescriptors = tagHelperTypes.SelectMany(type =>
-                tagHelperDescriptorFactory.CreateDescriptors(tagHelperAssemblyName, type, errorSink));
-
-            // Ensure descriptors were determined without error.
-            Assert.Empty(errorSink.Errors);
-
-            // Act
-            var output = DotNet(
-                "razor-tooling",
-                "resolve-taghelpers",
-                TestProjectFile,
-                tagHelperAssemblyName,
-                "-b",
-                "doesnotexist").ToString();
-
-            // Assert
-            var resolveTagHelpersResult = JsonConvert.DeserializeObject<ResolvedTagHelperDescriptorsResult>(output);
-            Assert.Empty(resolveTagHelpersResult.Errors);
-            Assert.Equal(
-                expectedDescriptors,
-                resolveTagHelpersResult.Descriptors,
-                CaseSensitiveTagHelperDescriptorComparer.Default);
-        }
-
-        [Fact]
-        public void ResolveTagHelpersDispatchesForPackageAssembliesIfAppIsBuilt()
-        {
-            // Arrange
-            DotNet("build");
+            DotNet("build3", TestProjectFile);
 
             var tagHelperAssemblyName = typeof(MultiEnumTagHelper).GetTypeInfo().Assembly.GetName().Name;
             var tagHelperDescriptorFactory = new TagHelperDescriptorFactory(designTime: true);
@@ -146,7 +103,10 @@ namespace Microsoft.AspNetCore.Razor.Tools.Test
         private void ResolveTagHelpersGeneratesExpectedOutput(params string[] buildArgs)
         {
             // Build the project so TagHelpers can be resolved.
-            DotNet("build", buildArgs);
+            var projectSpecificBuiidlArgs = new string[buildArgs.Length + 1];
+            projectSpecificBuiidlArgs[0] = TestProjectFile;
+            buildArgs.CopyTo(projectSpecificBuiidlArgs, 1);
+            DotNet("build3", projectSpecificBuiidlArgs);
 
             var tagHelperDescriptorFactory = new TagHelperDescriptorFactory(designTime: true);
             var errorSink = new ErrorSink();

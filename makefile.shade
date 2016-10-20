@@ -37,6 +37,10 @@ default CONFIGURATION_LOCAL='${E("Configuration")}'
         // Restore testapps folder locally to ensure all dynamically generated packages have been cached. 
         var testProjectDirectory = Path.Combine(BASE_DIR_LOCAL, "testapps");
         Dotnet("restore " + BASE_DIR_LOCAL + " -f " + TEST_ARTIFACTS_INITIAL_PACKAGE_DIR);
+
+        // Work around hybrid CSProj/project.json CLI build issues.
+        var testLibraryCSproj = Path.Combine(testProjectDirectory, "RazorToolingTestApp.Library", "RazorToolingTestApp.Library.csproj");
+        Dotnet("restore3 " + testLibraryCSproj);
     }
 
 #repack-x86 target='compile' if='Directory.Exists("src")'

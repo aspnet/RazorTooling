@@ -60,6 +60,15 @@ namespace Microsoft.AspNetCore.Razor.Tools {
         }
         
         /// <summary>
+        ///    Looks up a localized string similar to Could not resolve framework to invoke razor-tooling for. Error: &apos;{0}&apos;.
+        /// </summary>
+        public static string CouldNotResolveFramework {
+            get {
+                return ResourceManager.GetString("CouldNotResolveFramework", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///    Looks up a localized string similar to Failed to execute razor-tooling: &apos;{0}&apos;..
         /// </summary>
         public static string FailedToExecuteRazorTooling {
@@ -69,11 +78,11 @@ namespace Microsoft.AspNetCore.Razor.Tools {
         }
         
         /// <summary>
-        ///    Looks up a localized string similar to Project &apos;{0}&apos; does not support the provided framework &apos;{1}&apos;..
+        ///    Looks up a localized string similar to The project &apos;{0}&apos; must be built before executing razor-tooling..
         /// </summary>
-        public static string ProjectDoesNotSupportProvidedFramework {
+        public static string ProjectMustBeBuiltBeforeExecutingRazorTooling {
             get {
-                return ResourceManager.GetString("ProjectDoesNotSupportProvidedFramework", resourceCulture);
+                return ResourceManager.GetString("ProjectMustBeBuiltBeforeExecutingRazorTooling", resourceCulture);
             }
         }
     }

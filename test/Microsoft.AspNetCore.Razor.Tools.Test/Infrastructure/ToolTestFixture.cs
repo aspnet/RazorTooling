@@ -66,8 +66,16 @@ namespace Microsoft.AspNetCore.Razor.Tools.Test.Infrastructure
         public void Dispose()
         {
             Environment.SetEnvironmentVariable("NUGET_PACKAGES", _defaultNugetPackageLocation);
-            Directory.Delete(TestArtifactsTempPackagesDirectory, recursive: true);
-            Directory.Delete(TestArtifactsTempSrcPackagesDirectory, recursive: true);
+
+            if (Directory.Exists(TestArtifactsTempPackagesDirectory))
+            {
+                Directory.Delete(TestArtifactsTempPackagesDirectory, recursive: true);
+            }
+
+            if (Directory.Exists(TestArtifactsTempSrcPackagesDirectory))
+            {
+                Directory.Delete(TestArtifactsTempSrcPackagesDirectory, recursive: true);
+            }
         }
 
         private void PackSrcDirectory()
@@ -104,8 +112,6 @@ namespace Microsoft.AspNetCore.Razor.Tools.Test.Infrastructure
             {
                 "-s",
                 TestArtifactsTempSrcPackagesDirectory,
-                "-s",
-                TestArtifactsInitialPackagesDirectory,
             };
             foreach (var element in addElements)
             {
@@ -117,9 +123,20 @@ namespace Microsoft.AspNetCore.Razor.Tools.Test.Infrastructure
 
             foreach (var testProjectDirectory in Directory.EnumerateDirectories(TestAppDirectory))
             {
-                Console.WriteLine($"Initializing test app {Path.GetFileName(testProjectDirectory)}.");
+                var projectDirectoryName = Path.GetFileName(testProjectDirectory);
+                Console.WriteLine($"Initializing test app {projectDirectoryName}.");
 
-                DotNet(testProjectDirectory, "restore", nugetConfigSources.ToArray());
+                var objDirectory = Path.Combine(testProjectDirectory, "obj");
+                if (Directory.Exists(objDirectory))
+                {
+                    Directory.Delete(objDirectory, recursive: true);
+                }
+
+                var restoreArgs = new string[nugetConfigSources.Count + 1];
+                restoreArgs[0] = $"{projectDirectoryName}.csproj";
+                nugetConfigSources.CopyTo(restoreArgs, 1);
+
+                DotNet(testProjectDirectory, "restore3", restoreArgs);
 
                 Console.WriteLine("Done.");
             }

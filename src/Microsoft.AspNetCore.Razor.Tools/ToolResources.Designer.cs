@@ -67,14 +67,5 @@ namespace Microsoft.AspNetCore.Razor.Tools {
                 return ResourceManager.GetString("FailedToExecuteRazorTooling", resourceCulture);
             }
         }
-        
-        /// <summary>
-        ///    Looks up a localized string similar to Project &apos;{0}&apos; does not support the provided framework &apos;{1}&apos;..
-        /// </summary>
-        public static string ProjectDoesNotSupportProvidedFramework {
-            get {
-                return ResourceManager.GetString("ProjectDoesNotSupportProvidedFramework", resourceCulture);
-            }
-        }
     }
 }

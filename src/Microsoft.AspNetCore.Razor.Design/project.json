@@ -12,7 +12,10 @@
       "taghelper",
       "aspnetcore",
       "taghelpers"
-    ]
+    ],
+    "files": {
+      "include": [ "buildCrossTargeting/*", "build/*" ]
+    }
   },
   "buildOptions": {
     "keyFile": "../../tools/Key.snk",

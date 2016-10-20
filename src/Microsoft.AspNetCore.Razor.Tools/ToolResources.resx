@@ -120,7 +120,4 @@
   <data name="FailedToExecuteRazorTooling" xml:space="preserve">
     <value>Failed to execute razor-tooling: '{0}'.</value>
   </data>
-  <data name="ProjectDoesNotSupportProvidedFramework" xml:space="preserve">
-    <value>Project '{0}' does not support the provided framework '{1}'.</value>
-  </data>
 </root>

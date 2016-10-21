@@ -17,6 +17,6 @@ Outputs the Razor target framework used by tooling to the console.
 **********************************************************************************
 -->
   <Target Name="ResolveRazorTargetFramework">
-    <Message Text="______FRAMEWORK_______$(ResolvedRazorTargetFramework)______FRAMEWORK_______" />
+    <Message Importance="high" Text="______FRAMEWORK_______$(ResolvedRazorTargetFramework)______FRAMEWORK_______" />
   </Target>
 </Project>

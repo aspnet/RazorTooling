@@ -127,7 +127,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 const string ValueDelimiter = "______FRAMEWORK_______";
                 const string ResolveFrameworkTargetName = "ResolveRazorTargetFramework";
 
-                var args = new[] { $"/t:{ResolveFrameworkTargetName}" };
+                var args = new[] { $"/t:{ResolveFrameworkTargetName}", "/v:m" };
                 var command = Command.CreateDotNet("msbuild", args);
                 var outputWriter = new StringWriter();
 

@@ -33,6 +33,8 @@ project.lock.json
 *.ipch
 .settings
 *.sln.ide
+*.nuget.props
+*.nuget.targets
 node_modules
 
 **/[Cc]ompiler/[Rr]esources/**/*.js

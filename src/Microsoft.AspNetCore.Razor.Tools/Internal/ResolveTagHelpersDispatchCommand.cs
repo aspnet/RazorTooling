@@ -46,11 +46,16 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
 
         protected override int OnExecute()
         {
-            var projectFullPath = new FileInfo(ProjectArgument.Value).FullName;
-            var projectDirectory = Path.GetDirectoryName(projectFullPath);
+            var projectFileInfo = new FileInfo(ProjectArgument.Value);
+
+            if (!VerifyProjectIsBuilt(projectFileInfo))
+            {
+                // Project was not built. Error was reported, exit early.
+                return 0;
+            }
 
             NuGetFramework framework;
-            if (!TryResolveFramework(projectDirectory, out framework))
+            if (!TryResolveFramework(projectFileInfo, out framework))
             {
                 // Could not resolve framework for dispatch. Error was reported, exit early.
                 return 0;
@@ -77,9 +82,6 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
             }
 #endif
 
-            var environment = new EnvironmentProvider();
-            var packagedCommandSpecFactory = new PackagedCommandSpecFactory();
-
             var toolName = typeof(Design.Program).GetTypeInfo().Assembly.GetName().Name;
             var dispatchCommand = DotnetToolDispatcher.CreateDispatchCommand(
                 dispatchArgs,
@@ -87,7 +89,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 ConfigurationOption.Value(),
                 outputPath: null,
                 buildBasePath: BuildBasePathOption.Value(),
-                projectDirectory: projectDirectory,
+                projectDirectory: projectFileInfo.DirectoryName,
                 toolName: toolName);
 
             using (var errorWriter = new StringWriter())
@@ -115,7 +117,25 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
             }
         }
 
-        private bool TryResolveFramework(string projectDirectory, out NuGetFramework resolvedFramework)
+        private bool VerifyProjectIsBuilt(FileInfo projectFileInfo)
+        {
+            var projectDirectory = projectFileInfo.Directory;
+            var objDirectories = projectDirectory.GetDirectories("obj", SearchOption.TopDirectoryOnly);
+
+            if (objDirectories.Length == 0)
+            {
+                ReportError(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        ToolResources.ProjectMustBeBuiltBeforeExecutingRazorTooling,
+                        projectFileInfo.DirectoryName));
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryResolveFramework(FileInfo projectFileInfo, out NuGetFramework resolvedFramework)
         {
             string frameworkValue;
             if (FrameworkOption.HasValue())
@@ -124,22 +144,30 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
             }
             else
             {
+                EnsureToolTargetsAreImported(projectFileInfo);
+
                 const string ValueDelimiter = "______FRAMEWORK_______";
                 const string ResolveFrameworkTargetName = "ResolveRazorTargetFramework";
 
-                var args = new[] { $"/t:{ResolveFrameworkTargetName}", "/v:m" };
+                var args = new[] { $"/t:{ResolveFrameworkTargetName}", "/v:m", "/consoleloggerparameters:DisableConsoleColor" };
                 var command = Command.CreateDotNet("msbuild", args);
                 var outputWriter = new StringWriter();
 
                 var exitCode = command
-                    .ForwardStdErr(Console.Error)
+                    .ForwardStdErr(outputWriter)
                     .ForwardStdOut(outputWriter)
-                    .WorkingDirectory(projectDirectory)
+                    .WorkingDirectory(projectFileInfo.DirectoryName)
                     .Execute()
                     .ExitCode;
 
                 if (exitCode != 0)
                 {
+                    ReportError(
+                        string.Format(
+                            CultureInfo.CurrentCulture,
+                            ToolResources.CouldNotResolveFramework,
+                            outputWriter.ToString()));
+
                     resolvedFramework = null;
                     return false;
                 }
@@ -152,6 +180,30 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
 
             resolvedFramework = NuGetFramework.Parse(frameworkValue);
             return true;
+        }
+
+        private static void EnsureToolTargetsAreImported(FileInfo projectFileInfo)
+        {
+            const string ToolsImportTargetsName = "Microsoft.AspNetCore.Razor.ToolsImports.targets";
+
+            var toolImportTargetsFileName = $"{projectFileInfo.Name}.{ToolsImportTargetsName}";
+            var projectDirectory = projectFileInfo.Directory;
+            var objDirectory = projectDirectory.GetDirectories("obj", SearchOption.TopDirectoryOnly)[0];
+            var toolImportTargetsFilePath = Path.Combine(objDirectory.FullName, toolImportTargetsFileName);
+            if (!File.Exists(toolImportTargetsFilePath))
+            {
+                var toolType = typeof(Program);
+                var toolAssembly = toolType.GetTypeInfo().Assembly;
+                var toolNamespace = toolType.Namespace;
+                var toolImportTargetsResourceName = $"{toolNamespace}.compiler.resources.{ToolsImportTargetsName}";
+                using (var resourceStream = toolAssembly.GetManifestResourceStream(toolImportTargetsResourceName))
+                {
+                    var targetBytes = new byte[resourceStream.Length];
+                    resourceStream.Read(targetBytes, 0, targetBytes.Length);
+
+                    File.WriteAllBytes(toolImportTargetsFilePath, targetBytes);
+                }
+            }
         }
     }
 }

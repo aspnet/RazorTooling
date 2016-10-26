@@ -1,0 +1,22 @@
+﻿<!--
+Copyright (c) .NET Foundation. All rights reserved.
+Licensed under the Apache License, Version 2.0.
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ResolvedRazorTargetFramework>$(NuGetTargetMoniker)</ResolvedRazorTargetFramework>
+    <ResolvedRazorTargetFramework Condition="'$(ResolvedRazorTargetFramework)'==''">$(TargetFramework)</ResolvedRazorTargetFramework>
+  </PropertyGroup>
+
+<!--
+**********************************************************************************
+Target: ResolveRazorTargetFramework
+
+Outputs the Razor target framework used by tooling to the console.
+
+**********************************************************************************
+-->
+  <Target Name="ResolveRazorTargetFramework">
+    <Message Importance="high" Text="______FRAMEWORK_______$(ResolvedRazorTargetFramework)______FRAMEWORK_______" />
+  </Target>
+</Project>

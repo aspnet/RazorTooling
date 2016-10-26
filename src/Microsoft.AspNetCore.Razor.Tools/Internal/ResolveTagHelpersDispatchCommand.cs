@@ -5,10 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using Microsoft.AspNetCore.Razor.Design;
-using Microsoft.DotNet.ProjectModel;
+using Microsoft.DotNet.Cli.Utils;
 using Microsoft.Extensions.CommandLineUtils;
 using Microsoft.Extensions.Internal;
 using NuGet.Frameworks;
@@ -47,32 +46,20 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
 
         protected override int OnExecute()
         {
-            var projectFile = ProjectReader.GetProject(ProjectArgument.Value);
-            var targetFrameworks = projectFile
-                .GetTargetFrameworks()
-                .Select(frameworkInformation => frameworkInformation.FrameworkName);
+            var projectFileInfo = new FileInfo(ProjectArgument.Value);
+
+            if (!VerifyProjectIsBuilt(projectFileInfo))
+            {
+                // Project was not built. Error was reported, exit early.
+                return 0;
+            }
 
             NuGetFramework framework;
-            if (!TryResolveFramework(targetFrameworks, out framework))
+            if (!TryResolveFramework(projectFileInfo, out framework))
             {
                 // Could not resolve framework for dispatch. Error was reported, exit early.
                 return 0;
             }
-
-#if NETCOREAPP1_0
-            int exitCode;
-            if (PackageOnlyResolveTagHelpersRunCommand.TryPackageOnlyTagHelperResolution(
-                    AssemblyNamesArgument,
-                    ProtocolOption,
-                    BuildBasePathOption,
-                    ConfigurationOption,
-                    projectFile,
-                    framework,
-                    out exitCode))
-            {
-                return exitCode;
-            }
-#endif
 
             var dispatchArgs = new List<string>
             {
@@ -102,7 +89,7 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 ConfigurationOption.Value(),
                 outputPath: null,
                 buildBasePath: BuildBasePathOption.Value(),
-                projectDirectory: projectFile.ProjectDirectory,
+                projectDirectory: projectFileInfo.DirectoryName,
                 toolName: toolName);
 
             using (var errorWriter = new StringWriter())
@@ -130,37 +117,103 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
             }
         }
 
-        private bool TryResolveFramework(
-            IEnumerable<NuGetFramework> availableFrameworks,
-            out NuGetFramework resolvedFramework)
+        private bool VerifyProjectIsBuilt(FileInfo projectFileInfo)
         {
-            NuGetFramework framework;
+            var projectDirectory = projectFileInfo.Directory;
+            var objDirectories = projectDirectory.GetDirectories("obj", SearchOption.TopDirectoryOnly);
+
+            if (objDirectories.Length == 0)
+            {
+                ReportError(
+                    string.Format(
+                        CultureInfo.CurrentCulture,
+                        ToolResources.ProjectMustBeBuiltBeforeExecutingRazorTooling,
+                        projectFileInfo.DirectoryName));
+                return false;
+            }
+
+            return true;
+        }
+
+        private bool TryResolveFramework(FileInfo projectFileInfo, out NuGetFramework resolvedFramework)
+        {
+            string frameworkValue;
             if (FrameworkOption.HasValue())
             {
-                var frameworkOptionValue = FrameworkOption.Value();
-                framework = NuGetFramework.Parse(frameworkOptionValue);
+                frameworkValue = FrameworkOption.Value();
+            }
+            else
+            {
+                EnsureToolTargetsAreImported(projectFileInfo);
 
-                if (!availableFrameworks.Contains(framework))
+                const string ValueDelimiter = "______FRAMEWORK_______";
+                const string ResolveFrameworkTargetName = "ResolveRazorTargetFramework";
+
+                var thisAssembly = typeof(Program).GetTypeInfo().Assembly;
+                var toolVersion = thisAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    ?.InformationalVersion
+                    ?? thisAssembly.GetName().Version.ToString();
+                var args = new[]
+                {
+                    $"/t:{ResolveFrameworkTargetName}",
+                    $"/p:_RazorToolsVersion={toolVersion}",
+                    "/v:m",
+                    "/consoleloggerparameters:DisableConsoleColor",
+                };
+                var command = Command.CreateDotNet("msbuild", args);
+                var outputWriter = new StringWriter();
+
+                var exitCode = command
+                    .ForwardStdErr(outputWriter)
+                    .ForwardStdOut(outputWriter)
+                    .WorkingDirectory(projectFileInfo.DirectoryName)
+                    .Execute()
+                    .ExitCode;
+
+                if (exitCode != 0)
                 {
                     ReportError(
                         string.Format(
                             CultureInfo.CurrentCulture,
-                            ToolResources.ProjectDoesNotSupportProvidedFramework,
-                            ProjectArgument.Value,
-                            frameworkOptionValue));
+                            ToolResources.CouldNotResolveFramework,
+                            outputWriter.ToString()));
 
                     resolvedFramework = null;
                     return false;
                 }
-            }
-            else
-            {
-                // Prioritize non-desktop frameworks since they have the option of not dispatching to resolve TagHelpers.
-                framework = availableFrameworks.FirstOrDefault(f => !f.IsDesktop()) ?? availableFrameworks.First();
+
+                var output = outputWriter.ToString();
+                var valueStart = output.IndexOf(ValueDelimiter) + ValueDelimiter.Length;
+                var valueEnd = output.LastIndexOf(ValueDelimiter);
+                frameworkValue = output.Substring(valueStart, valueEnd - valueStart);
             }
 
-            resolvedFramework = framework;
+            resolvedFramework = NuGetFramework.Parse(frameworkValue);
             return true;
+        }
+
+        private static void EnsureToolTargetsAreImported(FileInfo projectFileInfo)
+        {
+            const string ToolsImportTargetsName = "Microsoft.AspNetCore.Razor.ToolsImports.targets";
+
+            var toolImportTargetsFileName = $"{projectFileInfo.Name}.{ToolsImportTargetsName}";
+            var projectDirectory = projectFileInfo.Directory;
+            var objDirectory = projectDirectory.GetDirectories("obj", SearchOption.TopDirectoryOnly)[0];
+            var toolImportTargetsFilePath = Path.Combine(objDirectory.FullName, toolImportTargetsFileName);
+            if (!File.Exists(toolImportTargetsFilePath))
+            {
+                var toolType = typeof(Program);
+                var toolAssembly = toolType.GetTypeInfo().Assembly;
+                var toolNamespace = toolType.Namespace;
+                var toolImportTargetsResourceName = $"{toolNamespace}.compiler.resources.{ToolsImportTargetsName}";
+                using (var resourceStream = toolAssembly.GetManifestResourceStream(toolImportTargetsResourceName))
+                {
+                    var targetBytes = new byte[resourceStream.Length];
+                    resourceStream.Read(targetBytes, 0, targetBytes.Length);
+
+                    File.WriteAllBytes(toolImportTargetsFilePath, targetBytes);
+                }
+            }
         }
     }
 }

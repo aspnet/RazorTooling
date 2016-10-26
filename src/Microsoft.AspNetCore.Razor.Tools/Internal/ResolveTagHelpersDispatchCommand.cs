@@ -149,7 +149,17 @@ namespace Microsoft.AspNetCore.Razor.Tools.Internal
                 const string ValueDelimiter = "______FRAMEWORK_______";
                 const string ResolveFrameworkTargetName = "ResolveRazorTargetFramework";
 
-                var args = new[] { $"/t:{ResolveFrameworkTargetName}", "/v:m", "/consoleloggerparameters:DisableConsoleColor" };
+                var thisAssembly = typeof(Program).GetTypeInfo().Assembly;
+                var toolVersion = thisAssembly.GetCustomAttribute<AssemblyInformationalVersionAttribute>()
+                    ?.InformationalVersion
+                    ?? thisAssembly.GetName().Version.ToString();
+                var args = new[]
+                {
+                    $"/t:{ResolveFrameworkTargetName}",
+                    $"/p:_RazorToolsVersion={toolVersion}",
+                    "/v:m",
+                    "/consoleloggerparameters:DisableConsoleColor",
+                };
                 var command = Command.CreateDotNet("msbuild", args);
                 var outputWriter = new StringWriter();
 

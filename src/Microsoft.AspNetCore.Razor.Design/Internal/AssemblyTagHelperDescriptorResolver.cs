@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
@@ -20,6 +19,7 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
         private const string MvcAssemblyName = "Microsoft.AspNetCore.Mvc";
         private const string MethodName = "PopulateServiceCollection";
         private const string ViewComponentNameKey = "ViewComponentName";
+        private const string PropertyBagPropertyName = "PropertyBag";
 
         private readonly TagHelperDescriptorFactory _tagHelperDescriptorFactory;
         private readonly TagHelperTypeResolver _tagHelperTypeResolver;
@@ -92,7 +92,7 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
 
             // Temporary workaround to make design time for ViewComponent tag helpers work without needing a VS update.
             // This will be removed in a future version.
-            var vcthDescriptors = descriptors.Where(d => d.PropertyBag.ContainsKey(ViewComponentNameKey));
+            var vcthDescriptors = descriptors.Where(d => IsViewComponentTagHelperDescriptor(d));
             var fakeVcthDescriptors = GetFakeDescriptors(vcthDescriptors);
 
             var finalDescriptors = descriptors.Except(vcthDescriptors).Union(fakeVcthDescriptors);
@@ -141,15 +141,13 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
             foreach (var descriptor in vcthDescriptors)
             {
                 var fakeType = typeof(ViewComponentTagHelperDesignTimeType).FullName;
-                var fakeDescriptor = new TagHelperDescriptor(descriptor);
-                fakeDescriptor.TypeName = fakeType;
+                var fakeDescriptor = GetFakeDescriptorForTypeName(descriptor, fakeType);
 
                 var fakeAttributes = new List<TagHelperAttributeDescriptor>();
                 fakeDescriptor.Attributes = fakeAttributes;
 
                 var fakeHelperType = typeof(ViewComponentTagHelperDesignTimeHelperType).FullName;
-                var fakeHelperDescriptor = new TagHelperDescriptor(descriptor);
-                fakeHelperDescriptor.TypeName = fakeHelperType;
+                var fakeHelperDescriptor = GetFakeDescriptorForTypeName(descriptor, fakeHelperType);
 
                 var fakeHelperAttributes = new List<TagHelperAttributeDescriptor>();
                 fakeHelperDescriptor.Attributes = fakeHelperAttributes;
@@ -215,6 +213,38 @@ namespace Microsoft.AspNetCore.Razor.Design.Internal
             }
 
             return fakeDescriptors;
+        }
+
+        private static TagHelperDescriptor GetFakeDescriptorForTypeName(TagHelperDescriptor descriptor, string typeName)
+        {
+            var fakeDescriptor = new TagHelperDescriptor()
+            {
+                Prefix = descriptor.Prefix,
+                TagName = descriptor.TagName,
+                TypeName = typeName,
+                AssemblyName = descriptor.AssemblyName,
+                Attributes = descriptor.Attributes,
+                RequiredAttributes = descriptor.RequiredAttributes,
+                AllowedChildren = descriptor.AllowedChildren,
+                RequiredParent = descriptor.RequiredParent,
+                TagStructure = descriptor.TagStructure,
+                DesignTimeDescriptor = descriptor.DesignTimeDescriptor
+            };
+
+            return fakeDescriptor;
+        }
+
+        private static bool IsViewComponentTagHelperDescriptor(TagHelperDescriptor descriptor)
+        {
+            var propertyBag = descriptor.GetType().GetProperty(PropertyBagPropertyName)?.GetValue(descriptor)
+                as IDictionary<string, string>;
+
+            if (propertyBag != null)
+            {
+                return propertyBag.ContainsKey(ViewComponentNameKey);
+            }
+
+            return false;
         }
     }
 

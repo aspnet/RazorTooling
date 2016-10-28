@@ -41,6 +41,7 @@
           "type": "platform",
           "version": "1.0.0"
         },
+        "System.Runtime.InteropServices.RuntimeInformation": "4.3.0-*",
         "System.Runtime.Serialization.Primitives": "4.1.1"
       }
     },

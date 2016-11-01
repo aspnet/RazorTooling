@@ -7,7 +7,7 @@ using System.Reflection;
 using System.Text;
 using Microsoft.AspNetCore.Razor.Design.Internal;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
-using Microsoft.AspNetCore.Razor.Test.Internal;
+using Microsoft.AspNetCore.Razor.TagHelpers.Testing;
 using Microsoft.AspNetCore.Razor.Tools.Test.Infrastructure;
 using Microsoft.AspNetCore.Testing.xunit;
 using Newtonsoft.Json;

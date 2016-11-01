@@ -7,7 +7,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Razor.Compilation.TagHelpers;
 using Microsoft.AspNetCore.Razor.Runtime.TagHelpers;
 using Microsoft.AspNetCore.Razor.TagHelpers;
-using Microsoft.AspNetCore.Razor.Test.Internal;
+using Microsoft.AspNetCore.Razor.TagHelpers.Testing;
 using Xunit;
 
 namespace Microsoft.AspNetCore.Razor.Design.Internal

@@ -1,5 +1,5 @@
 {
-  "version": "1.0.0-preview2-final",
+  "version": "1.0.0-preview4-final",
   "description": "TagHelper tooling for .NET Core CLI. Contains the dotnet-razor-tooling command used to resolve TagHelperDescriptors for projects at design-time.",
   "packOptions": {
     "repository": {

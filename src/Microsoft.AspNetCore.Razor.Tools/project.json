@@ -25,7 +25,7 @@
     "xmlDoc": true
   },
   "dependencies": {
-    "Microsoft.AspNetCore.Razor.Design": "1.0.0-*",
+    "Microsoft.AspNetCore.Razor.Design": "1.1.0-*",
     "Microsoft.DotNet.Cli.Utils": "1.0.0-*",
     "Microsoft.Extensions.PlatformAbstractions": "1.0.0",
     "Microsoft.Extensions.DotnetToolDispatcher.Sources": {

@@ -9,11 +9,11 @@
         },
         "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview4-final",
         "Microsoft.AspNetCore.Razor.Test.Sources": {
-          "version": "1.0.0-rtm-21431",
+          "version": "1.0.1",
           "type": "build"
         },
         "Microsoft.Extensions.HashCodeCombiner.Sources": {
-          "version": "1.0.0-rtm-21431",
+          "version": "1.0.1",
           "type": "build"
         },
         "System.Diagnostics.Process": "4.1.0",

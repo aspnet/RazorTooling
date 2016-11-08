@@ -53,7 +53,7 @@
         "Microsoft.DotNet.ProjectModel.Loader": "1.0.0-preview2-003121",
         "Microsoft.NETCore.App": {
           "type": "platform",
-          "version": "1.0.0"
+          "version": "1.0.3-*"
         },
         "System.Diagnostics.Process": "4.1.0",
         "System.Runtime.Serialization.Primitives": "4.1.1"

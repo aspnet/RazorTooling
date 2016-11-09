@@ -3,13 +3,13 @@
   "dependencies": {
     "dotnet-test-xunit": "2.2.0-*",
     "Microsoft.AspNetCore.Razor.TagHelpers.Testing.Sources": {
-      "version": "1.1.0-*",
+      "version": "1.2.0-*",
       "type": "build"
     },
     "Microsoft.AspNetCore.Razor.Tools": "1.0.0-*",
-    "Microsoft.AspNetCore.Testing": "1.1.0-*",
+    "Microsoft.AspNetCore.Testing": "1.2.0-*",
     "Microsoft.Extensions.HashCodeCombiner.Sources": {
-      "version": "1.1.0-*",
+      "version": "1.2.0-*",
       "type": "build"
     },
     "RazorToolingTestApp.Library": "1.0.0",

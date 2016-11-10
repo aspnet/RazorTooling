@@ -12,7 +12,7 @@
     }
   },
   "tools": {
-    "Microsoft.AspNetCore.Razor.Tools": "1.1.0-*"
+    "Microsoft.AspNetCore.Razor.Tools": "1.2.0-*"
   },
   "frameworks": {
     "netcoreapp1.0": {

@@ -4,10 +4,10 @@
     "netcoreapp1.0": {
       "dependencies": {
         "Microsoft.NETCore.App": {
-          "version": "1.0.3",
+          "version": "1.0.4",
           "type": "platform"
         },
-        "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview4-final",
+        "Microsoft.AspNetCore.Razor.Tools": "1.0.0-preview4-update1",
         "Microsoft.AspNetCore.Razor.Test.Sources": {
           "version": "1.0.1",
           "type": "build"
